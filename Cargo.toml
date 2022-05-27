@@ -9,3 +9,4 @@ categories = ["text-processing"]
 description = "Rust version of Baidu's LAC (Lexical Analysis of Chinese)"
 
 [dependencies]
+paddle-inference-rust-api = { path = "./paddle-inference-rust-api" }
