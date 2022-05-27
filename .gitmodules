@@ -1,0 +1,3 @@
+[submodule "paddle-inference-rust-api"]
+	path = paddle-inference-rust-api
+	url = https://github.com/dimusic/paddle-inference-rust-api
