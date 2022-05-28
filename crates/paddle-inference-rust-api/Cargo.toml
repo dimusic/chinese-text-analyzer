@@ -1,0 +1,12 @@
+[package]
+name = "paddle-inference-rust-api"
+version = "0.1.0"
+edition = "2021"
+authors = ["Dmitry Malkov <dmitry.malkov@live.com>"]
+license = "MIT OR Apache-2.0"
+keywords = ["paddlepaddle", "machine-learning", "ai"]
+categories = ["api-bindings"]
+description = "Rust bindings for Paddle Inference API"
+
+[dependencies]
+paddle-inference-api-sys = { path = "../paddle-inference-api-sys" }
