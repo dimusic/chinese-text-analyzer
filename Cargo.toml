@@ -8,5 +8,10 @@ keywords = ["text-analyzer", "chinese", "nlp"]
 categories = ["text-processing"]
 description = "Rust version of Baidu's LAC (Lexical Analysis of Chinese)"
 
+[workspace]
+members = [
+    "baidu-lac-rs"
+]
+
 [dependencies]
 paddle-inference-rust-api = { path = "./paddle-inference-rust-api" }

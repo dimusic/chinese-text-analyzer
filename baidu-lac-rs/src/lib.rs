@@ -1,44 +1,6 @@
-mod dict_utils;
 mod output_item;
-use std::{str::Chars, collections::HashSet};
 
-use output_item::OutputItem;
-use paddle_inference_rust_api::{PdConfig, PdPredictor};
-
-use crate::dict_utils::{load_word2id_dict, load_q2b_dict, load_id2label_dict};
-
-fn parse_targets(labels: Vec<String>, words: Vec<String>) -> Vec<OutputItem> {
-    let mut result: Vec<OutputItem> = vec![];
-
-    labels.iter().enumerate().for_each(|(i, label)| {
-        let label_len = label.len();
-
-        if result.is_empty() || label.rfind("B") == Some(label_len  - 1) || label.rfind("S") == Some(label_len - 1) {
-            let tag = &labels[i][0..(labels[i].len() - 2)];
-
-            result.push(OutputItem {
-                word: words[i].clone(),
-                tag: tag.to_owned(),
-            });
-        }
-        else {
-            let result_len = result.len();
-            result[result_len - 1].word.push_str(&words[i]);
-        }
-    });
-
-    result
-}
-
-fn filter_unique(words: &Vec<OutputItem>) -> Vec<String> {
-    words.into_iter()
-        .map(|output_item| output_item.word.to_owned())
-        .collect::<HashSet<_>>()
-        .into_iter()
-        .collect()
-}
-
-fn main() {
+fn run(query: String) {
     let model_path_raw = String::from("./models/seg_model");
     let word2dict = load_word2id_dict(format!("{}/conf/word.dic", model_path_raw.clone()));
     let q2b_dict = load_q2b_dict(format!("{}/conf/q2b.dic", model_path_raw.clone()));
@@ -48,7 +10,7 @@ fn main() {
         .unwrap_or(&(word2dict.len() as i64 - 1))
         .to_owned();
 
-    let query_str = String::from("LAC是个优秀的分词工具... 是个" );
+    // let query_str = String::from("LAC是个优秀的分词工具... 是个" );
 
     let config = PdConfig::new();
     config.disable_gpu();
@@ -65,7 +27,7 @@ fn main() {
     // generate data
     let mut _sec_words_batch: Vec<Chars> = vec![];
     let mut shape_size: u64 = 0;
-    let sec_words = query_str.chars();
+    let sec_words = query.chars();
     _sec_words_batch.push(sec_words.clone());
     shape_size += sec_words.count() as u64;
 
@@ -121,4 +83,13 @@ fn main() {
     println!("total unique words: {:#?}", unique_words.len());
 
     println!("{:#?}", unique_words);
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        let result = 2 + 2;
+        assert_eq!(result, 4);
+    }
 }
