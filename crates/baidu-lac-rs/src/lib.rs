@@ -1,4 +1,4 @@
-use std::{str::Chars, collections::HashSet};
+use std::{str::Chars};
 
 use output_item::OutputItem;
 use paddle_inference_rust_api::{PdConfig, PdPredictor};
@@ -31,15 +31,7 @@ fn parse_targets(labels: Vec<String>, words: Vec<String>) -> Vec<OutputItem> {
     result
 }
 
-fn filter_unique(words: &Vec<OutputItem>) -> Vec<String> {
-    words.into_iter()
-        .map(|output_item| output_item.word.to_owned())
-        .collect::<HashSet<_>>()
-        .into_iter()
-        .collect()
-}
-
-pub fn run(query: String) -> Vec<OutputItem> {
+pub fn run(query: &str) -> Vec<OutputItem> {
     let model_path_raw = String::from("./models/seg_model");
     let word2dict = load_word2id_dict(format!("{}/conf/word.dic", model_path_raw.clone()));
     let q2b_dict = load_q2b_dict(format!("{}/conf/q2b.dic", model_path_raw.clone()));
@@ -48,8 +40,6 @@ pub fn run(query: String) -> Vec<OutputItem> {
     let _oov_id: i64 = word2dict.get("OOV")
         .unwrap_or(&(word2dict.len() as i64 - 1))
         .to_owned();
-
-    // let query_str = String::from("LAC是个优秀的分词工具... 是个" );
 
     let config = PdConfig::new();
     config.disable_gpu();
@@ -114,23 +104,5 @@ pub fn run(query: String) -> Vec<OutputItem> {
         .map(|c| { c.to_string() })
         .collect());
 
-    // println!("output_items {:#?}", output_items);
-
-    // let unique_words: Vec<String> = filter_unique(&output_items);
-
-    // println!("total words count {}", output_items.len());
-    // println!("total unique words: {:#?}", unique_words.len());
-
-    // println!("{:#?}", unique_words);
-
     output_items
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
 }
