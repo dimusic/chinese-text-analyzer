@@ -1,3 +1,0 @@
-[submodule "baidu-lac-rs/paddle-inference-rust-api"]
-	path = baidu-lac-rs/paddle-inference-rust-api
-	url = https://github.com/dimusic/paddle-inference-rust-api.git
