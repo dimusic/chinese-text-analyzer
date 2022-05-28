@@ -1,12 +1,46 @@
 mod dict_utils;
-use std::str::Chars;
+mod output_item;
+use std::{str::Chars, collections::HashSet};
 
+use output_item::OutputItem;
 use paddle_inference_rust_api::{PdConfig, PdPredictor};
 
 use crate::dict_utils::{load_word2id_dict, load_q2b_dict, load_id2label_dict};
 
+fn parse_targets(labels: Vec<String>, words: Vec<String>) -> Vec<OutputItem> {
+    let mut result: Vec<OutputItem> = vec![];
+
+    labels.iter().enumerate().for_each(|(i, label)| {
+        let label_len = label.len();
+
+        if result.is_empty() || label.rfind("B") == Some(label_len  - 1) || label.rfind("S") == Some(label_len - 1) {
+            let tag = &labels[i][0..(labels[i].len() - 2)];
+
+            result.push(OutputItem {
+                word: words[i].clone(),
+                tag: tag.to_owned(),
+            });
+        }
+        else {
+            let result_len = result.len();
+            result[result_len - 1].word.push_str(&words[i]);
+        }
+    });
+
+    result
+}
+
+fn filter_unique(words: Vec<OutputItem>) -> Vec<String> {
+    words.into_iter()
+        .map(|output_item| output_item.word)
+        .collect::<HashSet<_>>()
+        .into_iter()
+        .collect()
+}
+
 fn main() {
-    let model_path_raw = String::from("./models/lac_model");
+println!("test");
+let model_path_raw = String::from("./models/seg_model");
     let word2dict = load_word2id_dict(format!("{}/conf/word.dic", model_path_raw.clone()));
     let q2b_dict = load_q2b_dict(format!("{}/conf/q2b.dic", model_path_raw.clone()));
     let id2label_dict = load_id2label_dict(format!("{}/conf/tag.dic", model_path_raw.clone()));
@@ -15,13 +49,13 @@ fn main() {
         .unwrap_or(&(word2dict.len() as i64 - 1))
         .to_owned();
 
-    let query_str = String::from("LAC是个优秀的分词工具");
+    let query_str = String::from("LAC是个优秀的分词工具... 是个" );
 
     let config = PdConfig::new();
     config.disable_gpu();
     config.disable_glog_info();
     config.set_cpu_math_library_num_threads(1);
-    config.set_model_dir("./models/lac_model/model");
+    config.set_model_dir("./models/seg_model/model");
 
     let predictor = PdPredictor::new(&config);
     let input_names = predictor.get_input_names();
@@ -43,7 +77,6 @@ fn main() {
     input_tensor.set_lod(t_lod);
 
     let shape: Vec<i32> = vec![_sec_words_batch[0].clone().count() as i32, 1];
-    println!("shape: {:?}", shape);
     input_tensor.reshape(shape);
 
     let data: Vec<i64> = _sec_words_batch[0].clone().into_iter().map(|c| {
@@ -68,21 +101,27 @@ fn main() {
     let mut output_data: Vec<i64> = vec![0; output_shape[0].try_into().unwrap()];
     output_tensor.copy_to_cpu(&mut output_data);
 
-    println!("output_data: {:?}", output_data);
-
-    for (i, c) in c_lod_vec_.iter().enumerate() {
-        let next = c_lod_vec_.get(i + 1)
-            .or(Some(&0))
-            .unwrap();
-        println!("j: {} - {}", next, c);
-    }
-
-    for oid in output_data.iter() {
-        if let Some(label) = id2label_dict.get(oid) {
-            println!("label: {}", label);
+    let labels: Vec<String> = output_data.iter().map(|label_id| {
+        if let Some(label) = id2label_dict.get(&label_id) {
+            return label.to_owned();
         }
-        else {
-            println!("no label for: {}", oid);
-        }
-    }
+
+        String::from("")
+    }).collect();
+
+    let output_items = parse_targets(labels, _sec_words_batch[0].clone()
+        .into_iter()
+        .map(|c| { c.to_string() })
+        .collect());
+
+    // println!("output_items {:#?}", output_items);
+
+    let words: Vec<String> = filter_unique(output_items);
+    
+    // output_items.iter().map(|i| {
+    //     i.word.to_owned()
+    // }).collect();
+
+    println!("{:#?}", words);
+    println!("total words: {:#?}", words.len());
 }
