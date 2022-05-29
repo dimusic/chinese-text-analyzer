@@ -12,4 +12,4 @@ description = "Rust version of Baidu's LAC (Lexical Analysis of Chinese)"
 
 [dependencies]
 paddle-inference-rust-api = { path = "../paddle-inference-rust-api" }
-serde = "1.0.137"
+serde = { version = "1.0.137", features = ["derive"] }
