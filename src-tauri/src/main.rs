@@ -10,7 +10,11 @@ use serde::{Serialize, Deserialize};
 
 fn filter_unique(output_items: &Vec<OutputItem>) -> Vec<String> {
   output_items.into_iter()
-      .map(|output_item| output_item.word.to_owned())
+      .map(|output_item| {
+        println!("output_item.word {:?}", output_item.word.to_owned());
+        output_item.word.to_owned()
+      })
+      .filter(|word| { word != " " })
       .collect::<HashSet<_>>()
       .into_iter()
       .collect()
@@ -19,14 +23,13 @@ fn filter_unique(output_items: &Vec<OutputItem>) -> Vec<String> {
 #[derive(Debug, Serialize, Deserialize)]
 struct AnalyzedOutput {
   pub output_items: Vec<OutputItem>,
-  pub total_words: usize,
+  pub words_count: usize,
   pub unique_words: Vec<String>,
-  pub total_unique_words: usize,
+  pub unique_words_count: usize,
 }
 
 #[tauri::command]
 fn analyze_text(text: &str) -> AnalyzedOutput {
-  println!("I was invoked from JS! {}", text);
   let output_items = baidu_lac_rs::run(text);
   let output_items_len = output_items.len();
   let unique_words = filter_unique(&output_items);
@@ -34,9 +37,9 @@ fn analyze_text(text: &str) -> AnalyzedOutput {
 
   AnalyzedOutput {
     output_items,
-    total_words: output_items_len,
+    words_count: output_items_len,
     unique_words: unique_words,
-    total_unique_words: unique_words_len,
+    unique_words_count: unique_words_len,
   }
 }
 
