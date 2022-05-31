@@ -1,3 +1,4 @@
 /target
 /paddle-lib
+**/lib
 **/models

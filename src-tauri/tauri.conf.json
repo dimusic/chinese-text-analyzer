@@ -34,12 +34,15 @@
       "longDescription": "",
       "macOS": {
         "entitlements": null,
-        "exceptionDomain": "",
+        "exceptionDomain": "localhost",
         "frameworks": [],
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "./models/**/*",
+        "./lib/**/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
