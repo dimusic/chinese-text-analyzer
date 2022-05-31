@@ -8,18 +8,6 @@ use std::{collections::HashSet, hash::Hash};
 use baidu_lac_rs::output_item::OutputItem;
 use serde::{Serialize, Deserialize};
 
-fn filter_unique_output_items(output_items: &Vec<OutputItem>) -> Vec<String> {
-  output_items.into_iter()
-      .map(|output_item| {
-        println!("output_item.word {:?}", output_item.word.to_owned());
-        output_item.word.to_owned()
-      })
-      .filter(|word| { word != " " })
-      .collect::<HashSet<_>>()
-      .into_iter()
-      .collect()
-}
-
 fn filter_unique<T>(items: T) -> T
 where T: IntoIterator + FromIterator<<T>::Item>, <T>::Item: Hash, <T>::Item: Eq {
   items.into_iter()
@@ -50,14 +38,11 @@ fn analyze_text(text: &str) -> AnalyzedOutput {
   let unique_chars_count = unique_chars.len();
   
   let words: Vec<String> = output_items.clone().into_iter()
-    .map(|item| {
-      item.word.to_owned()
-    })
-    .filter(|word| {
-      word != " "
-    })
+    .map(|item| { item.word.to_owned() })
+    .filter(|word| { word != " " })
     .collect();
-  let unique_words = filter_unique(words);
+  let mut unique_words = filter_unique(words);
+  unique_words.sort_by_key(|w| { w.to_owned() });
   let unique_words_len = unique_words.len();
 
   AnalyzedOutput {
