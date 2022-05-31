@@ -5,13 +5,13 @@ import { AnalyzerOutput } from '../../common/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer({ onAnalyze }: { onAnalyze: (text: string) => Promise<AnalyzerOutput> }) {
-    const [text, setText] = useState("LAC是个优秀的分词工具... 是个");
+    const [text, setText] = useState("LAC是个优秀的分词工具...");
     const [output, setOutput] = useState<AnalyzerOutput | null>(null);
 
     const handleAnalyzeClick = useCallback(async (e: MouseEvent) => {
         const res = await onAnalyze(text);
         setOutput(res);
-    }, [onAnalyze]);
+    }, [onAnalyze, text]);
 
     return (
         <>
