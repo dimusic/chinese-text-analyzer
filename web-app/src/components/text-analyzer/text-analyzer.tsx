@@ -1,18 +1,29 @@
 import { Button } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { MouseEvent, useCallback, useState } from 'react';
-import { AnalyzerOutput } from '../../common/analyzer-output';
+import { AnalyzedCounterOutput, AnalyzerOutput } from '../../common/analyzer-output';
 import FileAnalyzer from './file-analyzer';
 import TextAnalyzerOutput from './text-analyzer-output';
 
-function TextAnalyzer({ onAnalyze }: { onAnalyze: (text: string) => Promise<AnalyzerOutput> }) {
+function TextAnalyzer(
+    { onAnalyze, onAnalyzeOld, onAnalyzerInit }: {
+        onAnalyze: (text: string) => Promise<AnalyzedCounterOutput>,
+        onAnalyzeOld: (text: string) => Promise<AnalyzerOutput>,
+        onAnalyzerInit: () => Promise<void>,
+    },
+) {
     const [text, setText] = useState("LAC是个优秀的分词工具...");
-    const [output, setOutput] = useState<AnalyzerOutput | null>(null);
+    const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
 
     const handleAnalyzeClick = useCallback(async (e: MouseEvent) => {
         const res = await onAnalyze(text);
         setOutput(res);
     }, [onAnalyze, text]);
+
+    const handleAnalyzeOldClick = useCallback(async (e: MouseEvent) => {
+        const res = await onAnalyzeOld(text);
+        setOutput(res);
+    }, [onAnalyzeOld, text]);
 
     return (
         <>
@@ -22,6 +33,12 @@ function TextAnalyzer({ onAnalyze }: { onAnalyze: (text: string) => Promise<Anal
                 marginBottom: 20,
             }}>
                 <div>
+                    <div>
+                        <Button type="default" onClick={onAnalyzerInit}>
+                            Init Analyzer
+                        </Button>
+                    </div>
+
                     <TextArea
                         rows={3}
                         style={{ marginBottom: 10 }}
@@ -30,7 +47,11 @@ function TextAnalyzer({ onAnalyze }: { onAnalyze: (text: string) => Promise<Anal
                     ></TextArea>
 
                     <Button type="primary" onClick={handleAnalyzeClick}>
-                        Analyze
+                        Analyze (jieba)
+                    </Button>
+                    
+                    <Button type="primary" onClick={handleAnalyzeOldClick}>
+                        Analyze (baidu)
                     </Button>
                 </div>
 

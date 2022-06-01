@@ -12,3 +12,10 @@ export interface AnalyzerOutput {
     output_items: LacOutputItem[];
     unique_words: string[];
 };
+
+export interface AnalyzedCounterOutput {
+    chars_count: number;
+    unique_chars_count: number;
+    words_count: number;
+    unique_words_count: number;
+}

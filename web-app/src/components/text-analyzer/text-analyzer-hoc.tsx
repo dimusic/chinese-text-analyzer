@@ -1,13 +1,25 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect } from "react";
-import { AnalyzerOutput } from "../../common/analyzer-output";
+import { AnalyzedCounterOutput, AnalyzerOutput } from "../../common/analyzer-output";
 import TextAnalyzer from "./text-analyzer";
 
-async function tauriAnalyzeText(text: string): Promise<AnalyzerOutput> {
-    let output: AnalyzerOutput = await invoke("analyze_text", { text: text });
+async function tauriAnalyzeText_jieba(text: string): Promise<AnalyzedCounterOutput> {
+    console.log('tauriAnalyzeText_jieba');
+    let output: AnalyzedCounterOutput = await invoke("analyze_using_jieba", { text: text });
 
     return output;
+}
+
+async function tauriAnalyzeText_baidu(text: string): Promise<AnalyzerOutput> {
+    console.log('tauriAnalyzeText_baidu');
+    let output: AnalyzerOutput = await invoke("analyze_text", { text: text });
+    
+    return output;
+}
+
+async function tauriAnalyzerInit(): Promise<void> {
+    return await invoke("initialize_analyzer");
 }
 
 function TextAnalyzerHoc() {
@@ -35,7 +47,9 @@ function TextAnalyzerHoc() {
 
     return (
         <TextAnalyzer
-            onAnalyze={tauriAnalyzeText}
+            onAnalyze={tauriAnalyzeText_jieba}
+            onAnalyzeOld={tauriAnalyzeText_baidu}
+            onAnalyzerInit={tauriAnalyzerInit}
         ></TextAnalyzer>
     );
 }
