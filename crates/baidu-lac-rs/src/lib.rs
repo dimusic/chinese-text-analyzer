@@ -42,6 +42,7 @@ pub fn run(query: &str) -> Vec<OutputItem> {
         .to_owned();
 
     let config = PdConfig::new();
+    config.enable_mkldnn();
     config.disable_gpu();
     config.disable_glog_info();
     config.set_cpu_math_library_num_threads(1);
@@ -85,7 +86,11 @@ pub fn run(query: &str) -> Vec<OutputItem> {
 
     input_tensor.copy_from_cpu(data);
 
+use std::time::Instant;
+let now = Instant::now();
     predictor.run();
+let elapsed = now.elapsed();
+println!("[baidu-lac-rs]: Elapsed: {:.2?}", elapsed);
 
     let output_shape = output_tensor.get_shape();
     let mut output_data: Vec<i64> = vec![0; output_shape[0].try_into().unwrap()];

@@ -1,6 +1,6 @@
 use std::ffi::CString;
 
-use paddle_inference_api_sys::{PD_ConfigCreate, PD_Config, PD_ConfigDisableGpu, PD_ConfigSetCpuMathLibraryNumThreads, PD_ConfigDisableGlogInfo, PD_ConfigSetModelDir};
+use paddle_inference_api_sys::{PD_ConfigCreate, PD_Config, PD_ConfigDisableGpu, PD_ConfigSetCpuMathLibraryNumThreads, PD_ConfigDisableGlogInfo, PD_ConfigSetModelDir, PD_ConfigEnableMKLDNN};
 
 #[derive(Debug)]
 pub struct PdConfig {
@@ -26,6 +26,13 @@ impl PdConfig {
 
     pub fn get_raw_config_ptr(&self) -> *mut PD_Config {
         self.raw_config_ptr
+    }
+
+    /// Turn on MKLDNN
+    pub fn enable_mkldnn(&self) {
+        unsafe {
+            PD_ConfigEnableMKLDNN(self.raw_config_ptr);
+        }
     }
 
     /// Turn off GPU.
