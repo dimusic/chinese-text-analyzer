@@ -2,6 +2,7 @@ import { Button } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { MouseEvent, useCallback, useState } from 'react';
 import { AnalyzerOutput } from '../../common/analyzer-output';
+import FileAnalyzer from './file-analyzer';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer({ onAnalyze }: { onAnalyze: (text: string) => Promise<AnalyzerOutput> }) {
@@ -34,7 +35,9 @@ function TextAnalyzer({ onAnalyze }: { onAnalyze: (text: string) => Promise<Anal
                 </div>
 
                 <div>
+                    {/* <FileAnalyzer
 
+                    ></FileAnalyzer> */}
                 </div>
             </div>
 

@@ -23,7 +23,7 @@ function TextAnalyzerOutput({ analyzerOutput }: { analyzerOutput: AnalyzerOutput
                 <strong>Unique Words Count:</strong> {analyzerOutput.unique_words_count}
             </div>
 
-            <List
+            {/* <List
                 rowKey={word => word}
                 size="small"
                 header={<div>Unique Words:</div>}
@@ -31,7 +31,7 @@ function TextAnalyzerOutput({ analyzerOutput }: { analyzerOutput: AnalyzerOutput
                 bordered
                 dataSource={analyzerOutput.unique_words}
                 renderItem={word => <List.Item>{word}</List.Item>}
-            />
+            /> */}
         </div>
     );
 }

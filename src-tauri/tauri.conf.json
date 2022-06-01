@@ -11,9 +11,7 @@
   },
   "tauri": {
     "allowlist": {
-      "fs": {
-        "readFile": true
-      }
+      "all": true
     },
     "bundle": {
       "active": true,
@@ -40,8 +38,6 @@
         "signingIdentity": null
       },
       "resources": [
-        "./models/**/*",
-        "./lib/**/*"
       ],
       "shortDescription": "",
       "targets": "all",
@@ -63,7 +59,8 @@
         "height": 600,
         "resizable": true,
         "title": "Chinese Text Analyzer",
-        "width": 800
+        "width": 800,
+        "fileDropEnabled": true
       }
     ]
   }
