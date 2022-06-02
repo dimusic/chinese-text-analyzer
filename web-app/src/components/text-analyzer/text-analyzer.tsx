@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Checkbox } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { MouseEvent, useCallback, useState } from 'react';
 import { AnalyzedCounterOutput, AnalyzerOutput } from '../../common/analyzer-output';
@@ -8,7 +8,7 @@ import TextAnalyzerOutput from './text-analyzer-output';
 function TextAnalyzer(
     { onAnalyze, onAnalyzeOld, onAnalyzerInit }: {
         onAnalyze: (text: string) => Promise<AnalyzedCounterOutput>,
-        onAnalyzeOld: (text: string) => Promise<AnalyzerOutput>,
+        onAnalyzeOld: (text: string) => Promise<AnalyzedCounterOutput>,
         onAnalyzerInit: () => Promise<void>,
     },
 ) {
@@ -33,10 +33,14 @@ function TextAnalyzer(
                 marginBottom: 20,
             }}>
                 <div>
-                    <div>
+                    <div style={{ marginBottom: 10 }}>
                         <Button type="default" onClick={onAnalyzerInit}>
                             Init Analyzer
                         </Button>
+                    </div>
+
+                    <div style={{ marginBottom: 10 }}>
+                        <Checkbox checked={true} disabled={true}>Ignore punctuation</Checkbox>
                     </div>
 
                     <TextArea
@@ -46,11 +50,15 @@ function TextAnalyzer(
                         onChange={(e) => setText(e.target.value)}
                     ></TextArea>
 
-                    <Button type="primary" onClick={handleAnalyzeClick}>
+                    <Button
+                        type="primary"
+                        style={{ marginRight: 5 }}
+                        onClick={handleAnalyzeClick}
+                    >
                         Analyze (jieba)
                     </Button>
                     
-                    <Button type="primary" onClick={handleAnalyzeOldClick}>
+                    <Button type="primary" disabled={true} onClick={handleAnalyzeOldClick}>
                         Analyze (baidu)
                     </Button>
                 </div>

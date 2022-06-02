@@ -36,11 +36,21 @@ struct AnalyzedCounterOutput {
   pub chars_count: usize,
   pub unique_chars_count: usize,
   pub words_count: usize,
+  pub words: Vec<String>,
   pub unique_words_count: usize,
+  pub unique_words: Vec<String>,
+}
+
+fn filter_from_str(words: &mut Vec<String>, filter_str: &str) {
+  words.retain(|w| {
+    !filter_str.contains(w)
+  });
 }
 
 #[tauri::command]
 async fn analyze_text(text: String) -> AnalyzedCounterOutput {
+  let punctuation_chars = "\n\r,.:()!@[]+/\\！?？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃《》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.?;﹔|.-·-*─\''\"";
+
   let output_items = baidu_lac_rs::run(&text);
   // let output_items_len = output_items.len();
 
@@ -50,13 +60,20 @@ async fn analyze_text(text: String) -> AnalyzedCounterOutput {
   filter_unique2(&mut unique_chars);
   // let unique_chars = filter_unique(&chars);
   let unique_chars_count = unique_chars.len();
+
+  // let words_str: Vec<&str> = output_items.into_iter()
+  //   .map(|item| { item.word })
+  //   .filter(|word| word != " ")
+  //   .collect();
   
   let words: Vec<String> = output_items.iter()
     .map(|item| { item.word.to_owned() })
     .filter(|word| { word != " " })
     .collect();
   let mut unique_words = words.clone();
-  filter_unique2(&mut unique_chars);
+  filter_unique2(&mut unique_words);
+  filter_from_str(&mut unique_words, punctuation_chars);
+  
   unique_words.sort_by_key(|w| { w.to_owned() });
   let unique_words_len = unique_words.len();
 
@@ -65,6 +82,8 @@ async fn analyze_text(text: String) -> AnalyzedCounterOutput {
     unique_chars_count: unique_chars_count,
     unique_words_count: unique_words_len,
     words_count: words.len(),
+    words: words,
+    unique_words: unique_words,
   }
 
   // AnalyzedOutput {
@@ -79,13 +98,15 @@ async fn analyze_text(text: String) -> AnalyzedCounterOutput {
 }
 
 fn filter_unique2<T>(col: &mut Vec<T>)
-where T: Eq + Hash + Copy {
+where T: Eq + Hash + Clone {
   let mut unique = HashSet::new();
-  col.retain(|e| unique.insert(*e));
+  col.retain(|e| unique.insert(e.clone()));
 }
 
 #[tauri::command]
 fn analyze_using_jieba(analyzer: tauri::State<'_, Analyzer>, text: String) -> AnalyzedCounterOutput {
+  let punctuation_chars = "\n\r,.:()!@[]+/\\！?？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃《》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.?;﹔|.-·-*─\''\"";
+  
 let now = Instant::now();
   let str = text.clone();
   let words = analyzer.instance.lock().unwrap().cut(&str, false);
@@ -100,12 +121,17 @@ println!("[jieba::cut]: Elapsed: {:.2?}", elapsed);
   let chars: Vec<char> = text.chars().collect();
   let mut unique_chars = chars.clone();
   filter_unique2(&mut unique_chars);
+  let mut unique_words: Vec<String> = unique_words.into_iter().map(|w| { w.to_owned() }).collect();
+  filter_from_str(&mut unique_words, punctuation_chars);
+  let words: Vec<String> = words.into_iter().map(|w| { w.to_owned() }).collect();
 
   AnalyzedCounterOutput {
     chars_count: chars.len(),
     unique_chars_count: unique_chars.len(),
-    unique_words_count: words.len(),
     words_count: words.len(),
+    words: words,
+    unique_words_count: unique_words.len(),
+    unique_words: unique_words,
   }
 }
 

@@ -18,4 +18,5 @@ export interface AnalyzedCounterOutput {
     unique_chars_count: number;
     words_count: number;
     unique_words_count: number;
+    unique_words: string[];
 }

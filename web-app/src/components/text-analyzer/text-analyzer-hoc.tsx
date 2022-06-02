@@ -11,9 +11,9 @@ async function tauriAnalyzeText_jieba(text: string): Promise<AnalyzedCounterOutp
     return output;
 }
 
-async function tauriAnalyzeText_baidu(text: string): Promise<AnalyzerOutput> {
+async function tauriAnalyzeText_baidu(text: string): Promise<AnalyzedCounterOutput> {
     console.log('tauriAnalyzeText_baidu');
-    let output: AnalyzerOutput = await invoke("analyze_text", { text: text });
+    let output: AnalyzedCounterOutput = await invoke("analyze_text", { text: text });
     
     return output;
 }
