@@ -1,15 +1,8 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnalyzedCounterOutput, AnalyzerOutput } from "../../common/analyzer-output";
 import TextAnalyzer from "./text-analyzer";
-
-async function tauriAnalyzeText_jieba(text: string): Promise<AnalyzedCounterOutput> {
-    console.log('tauriAnalyzeText_jieba');
-    let output: AnalyzedCounterOutput = await invoke("analyze_using_jieba", { text: text });
-
-    return output;
-}
 
 async function tauriAnalyzeText_baidu(text: string): Promise<AnalyzedCounterOutput> {
     console.log('tauriAnalyzeText_baidu');
@@ -18,22 +11,46 @@ async function tauriAnalyzeText_baidu(text: string): Promise<AnalyzedCounterOutp
     return output;
 }
 
-async function tauriAnalyzerInit(): Promise<void> {
-    return await invoke("initialize_analyzer");
+async function tauriAnalyzeFile(filePath: string): Promise<AnalyzedCounterOutput> {
+    let output: AnalyzedCounterOutput = await invoke("analyze_file", { filePath });
+    
+    return output;
 }
 
 function TextAnalyzerHoc() {
+    const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
+
+    const analyzerInitCallback = useCallback(() => {
+        async function tauriAnalyzerInit(): Promise<void> {
+            return await invoke("initialize_analyzer");
+        }
+
+        return tauriAnalyzerInit();
+    }, []);
+
+    const analyzeTextCallback = useCallback((text: string) => {
+        async function tauriAnalyzeText_jieba(text: string): Promise<void> {
+            console.log('tauriAnalyzeText_jieba');
+            let output: AnalyzedCounterOutput = await invoke("analyze_using_jieba", { text: text });
+        
+            setOutput(output);
+        }
+
+        tauriAnalyzeText_jieba(text)
+            .catch(console.error);
+    }, []);
+    
     useEffect(() => {
         //tauri://file-drop-hover
         //tauri://file-drop-cancelled
 
         const createTauriFileDropListener = async () => {
-            return await listen("tauri://file-drop", (event) => {
+            return await listen("tauri://file-drop", async (event) => {
                 console.log('file-drop', event);
                 const filePath = (event.payload as string[])[0];
 
-                //read file
-
+                let output = await tauriAnalyzeFile(filePath);
+                setOutput(output);
             });
         };
 
@@ -47,9 +64,10 @@ function TextAnalyzerHoc() {
 
     return (
         <TextAnalyzer
-            onAnalyze={tauriAnalyzeText_jieba}
+            onAnalyze={analyzeTextCallback}
             onAnalyzeOld={tauriAnalyzeText_baidu}
-            onAnalyzerInit={tauriAnalyzerInit}
+            onAnalyzerInit={analyzerInitCallback}
+            outputProp={output}
         ></TextAnalyzer>
     );
 }

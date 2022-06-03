@@ -6,23 +6,24 @@ import FileAnalyzer from './file-analyzer';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer(
-    { onAnalyze, onAnalyzeOld, onAnalyzerInit }: {
-        onAnalyze: (text: string) => Promise<AnalyzedCounterOutput>,
+    { onAnalyze, onAnalyzeOld, onAnalyzerInit, outputProp }: {
+        onAnalyze: (text: string) => void,
         onAnalyzeOld: (text: string) => Promise<AnalyzedCounterOutput>,
         onAnalyzerInit: () => Promise<void>,
+        outputProp: AnalyzedCounterOutput | null,
     },
 ) {
     const [text, setText] = useState("LAC是个优秀的分词工具...");
-    const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
+    // const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
 
     const handleAnalyzeClick = useCallback(async (e: MouseEvent) => {
         const res = await onAnalyze(text);
-        setOutput(res);
+        // setOutput(res);
     }, [onAnalyze, text]);
 
     const handleAnalyzeOldClick = useCallback(async (e: MouseEvent) => {
         const res = await onAnalyzeOld(text);
-        setOutput(res);
+        // setOutput(res);
     }, [onAnalyzeOld, text]);
 
     return (
@@ -71,7 +72,7 @@ function TextAnalyzer(
             </div>
 
             <TextAnalyzerOutput
-                analyzerOutput={output}
+                analyzerOutput={outputProp}
             ></TextAnalyzerOutput>
         </>
     );
