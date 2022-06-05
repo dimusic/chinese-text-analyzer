@@ -5,23 +5,26 @@ import { AnalyzedCounterOutput } from '../../common/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer(
-    { onAnalyze, onAnalyzerInit, outputProp }: {
+    { onAnalyze, onAnalyzerInit, outputProp, isFileDropHovering }: {
         onAnalyze: (text: string) => void,
         onAnalyzerInit: () => Promise<void>,
         outputProp: AnalyzedCounterOutput | null,
+        isFileDropHovering: boolean,
     },
 ) {
     const [text, setText] = useState("LAC是个优秀的分词工具...");
-    // const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
-
+    
     const handleAnalyzeClick = useCallback(async (e: MouseEvent) => {
-        const res = await onAnalyze(text);
-        // setOutput(res);
+        await onAnalyze(text);
     }, [onAnalyze, text]);
+
+    const className = isFileDropHovering
+        ? 'file-drop-hover'
+        : '';
 
     return (
         <>
-            <div style={{
+            <div className={className} style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 marginBottom: 20,

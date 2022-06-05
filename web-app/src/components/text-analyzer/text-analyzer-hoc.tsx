@@ -12,6 +12,7 @@ async function tauriAnalyzeFile(filePath: string): Promise<AnalyzedCounterOutput
 
 function TextAnalyzerHoc() {
     const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
+    const [isFileDropHovering, setIsFileDropHovering] = useState<boolean>(false);
 
     const analyzerInitCallback = useCallback(() => {
         async function tauriAnalyzerInit(): Promise<void> {
@@ -55,11 +56,46 @@ function TextAnalyzerHoc() {
         };
     }, []);
 
+    useEffect(() => {
+        const createTauriFileDropHoverListener = async () => {
+            return await listen("tauri://file-drop-hover", async (event) => {
+                console.log('file-drop-hover:', event);
+
+                setIsFileDropHovering(true);
+            });
+        };
+
+        let listener = createTauriFileDropHoverListener()
+            .catch(console.error);
+
+        return () => {
+            listener.then((unsub: any) => unsub());
+        };
+    }, []);
+
+    useEffect(() => {
+        const createTauriFileDropHoverListener = async () => {
+            return await listen("tauri://file-drop-cancelled", async (event) => {
+                console.log('file-drop-cancelled:', event);
+
+                setIsFileDropHovering(false);
+            });
+        };
+
+        let listener = createTauriFileDropHoverListener()
+            .catch(console.error);
+
+        return () => {
+            listener.then((unsub: any) => unsub());
+        };
+    }, []);
+
     return (
         <TextAnalyzer
             onAnalyze={analyzeTextCallback}
             onAnalyzerInit={analyzerInitCallback}
             outputProp={output}
+            isFileDropHovering={isFileDropHovering}
         ></TextAnalyzer>
     );
 }
