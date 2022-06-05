@@ -1,5 +1,5 @@
 import { List } from "antd";
-import { AnalyzedCounterOutput, AnalyzerOutput } from "../../common/analyzer-output";
+import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 
 function TextAnalyzerOutput({ analyzerOutput }: { analyzerOutput: AnalyzedCounterOutput | null } ) {
     if (!analyzerOutput) {

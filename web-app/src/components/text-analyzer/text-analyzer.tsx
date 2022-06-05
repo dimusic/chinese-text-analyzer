@@ -1,14 +1,12 @@
 import { Button, Checkbox } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { MouseEvent, useCallback, useState } from 'react';
-import { AnalyzedCounterOutput, AnalyzerOutput } from '../../common/analyzer-output';
-import FileAnalyzer from './file-analyzer';
+import { AnalyzedCounterOutput } from '../../common/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer(
-    { onAnalyze, onAnalyzeOld, onAnalyzerInit, outputProp }: {
+    { onAnalyze, onAnalyzerInit, outputProp }: {
         onAnalyze: (text: string) => void,
-        onAnalyzeOld: (text: string) => Promise<AnalyzedCounterOutput>,
         onAnalyzerInit: () => Promise<void>,
         outputProp: AnalyzedCounterOutput | null,
     },
@@ -20,11 +18,6 @@ function TextAnalyzer(
         const res = await onAnalyze(text);
         // setOutput(res);
     }, [onAnalyze, text]);
-
-    const handleAnalyzeOldClick = useCallback(async (e: MouseEvent) => {
-        const res = await onAnalyzeOld(text);
-        // setOutput(res);
-    }, [onAnalyzeOld, text]);
 
     return (
         <>
@@ -57,10 +50,6 @@ function TextAnalyzer(
                         onClick={handleAnalyzeClick}
                     >
                         Analyze (jieba)
-                    </Button>
-                    
-                    <Button type="primary" disabled={true} onClick={handleAnalyzeOldClick}>
-                        Analyze (baidu)
                     </Button>
                 </div>
 

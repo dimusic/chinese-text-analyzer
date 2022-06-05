@@ -1,15 +1,8 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useCallback, useEffect, useState } from "react";
-import { AnalyzedCounterOutput, AnalyzerOutput } from "../../common/analyzer-output";
+import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 import TextAnalyzer from "./text-analyzer";
-
-async function tauriAnalyzeText_baidu(text: string): Promise<AnalyzedCounterOutput> {
-    console.log('tauriAnalyzeText_baidu');
-    let output: AnalyzedCounterOutput = await invoke("analyze_text", { text: text });
-    
-    return output;
-}
 
 async function tauriAnalyzeFile(filePath: string): Promise<AnalyzedCounterOutput> {
     let output: AnalyzedCounterOutput = await invoke("analyze_file", { filePath });
@@ -65,7 +58,6 @@ function TextAnalyzerHoc() {
     return (
         <TextAnalyzer
             onAnalyze={analyzeTextCallback}
-            onAnalyzeOld={tauriAnalyzeText_baidu}
             onAnalyzerInit={analyzerInitCallback}
             outputProp={output}
         ></TextAnalyzer>
