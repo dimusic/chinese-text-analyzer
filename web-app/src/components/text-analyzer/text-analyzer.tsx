@@ -5,11 +5,10 @@ import { AnalyzedCounterOutput } from '../../common/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer(
-    { onAnalyze, onAnalyzerInit, outputProp, isFileDropHovering }: {
+    { onAnalyze, onAnalyzerInit, outputProp }: {
         onAnalyze: (text: string) => void,
         onAnalyzerInit: () => Promise<void>,
         outputProp: AnalyzedCounterOutput | null,
-        isFileDropHovering: boolean,
     },
 ) {
     const [text, setText] = useState("LAC是个优秀的分词工具...");
@@ -18,13 +17,9 @@ function TextAnalyzer(
         await onAnalyze(text);
     }, [onAnalyze, text]);
 
-    const className = isFileDropHovering
-        ? 'file-drop-hover'
-        : '';
-
     return (
         <>
-            <div className={className} style={{
+            <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 marginBottom: 20,
@@ -52,7 +47,7 @@ function TextAnalyzer(
                         style={{ marginRight: 5 }}
                         onClick={handleAnalyzeClick}
                     >
-                        Analyze (jieba)
+                        Analyze
                     </Button>
                 </div>
 

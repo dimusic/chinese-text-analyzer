@@ -2,6 +2,7 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useCallback, useEffect, useState } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
+import FileDropOverlay from "./file-drop-overlay";
 import TextAnalyzer from "./text-analyzer";
 
 async function tauriAnalyzeFile(filePath: string): Promise<AnalyzedCounterOutput> {
@@ -45,6 +46,7 @@ function TextAnalyzerHoc() {
 
                 let output = await tauriAnalyzeFile(filePath);
                 setOutput(output);
+                setIsFileDropHovering(false);
             });
         };
 
@@ -91,12 +93,19 @@ function TextAnalyzerHoc() {
     }, []);
 
     return (
-        <TextAnalyzer
-            onAnalyze={analyzeTextCallback}
-            onAnalyzerInit={analyzerInitCallback}
-            outputProp={output}
-            isFileDropHovering={isFileDropHovering}
-        ></TextAnalyzer>
+        <>
+            {isFileDropHovering
+                ? <FileDropOverlay></FileDropOverlay>
+                : null}
+
+            <div style={{ padding: 20 }}>
+                <TextAnalyzer
+                    onAnalyze={analyzeTextCallback}
+                    onAnalyzerInit={analyzerInitCallback}
+                    outputProp={output}
+                ></TextAnalyzer>
+            </div>
+        </>
     );
 }
 
