@@ -102,7 +102,7 @@ function TextAnalyzerHoc() {
                 <TextAnalyzer
                     onAnalyze={analyzeTextCallback}
                     onAnalyzerInit={analyzerInitCallback}
-                    outputProp={output}
+                    analyzerOutput={output}
                 ></TextAnalyzer>
             </div>
         </>

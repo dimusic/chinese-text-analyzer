@@ -5,10 +5,10 @@ import { AnalyzedCounterOutput } from '../../common/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 function TextAnalyzer(
-    { onAnalyze, onAnalyzerInit, outputProp }: {
+    { onAnalyze, onAnalyzerInit, analyzerOutput }: {
         onAnalyze: (text: string) => void,
         onAnalyzerInit: () => Promise<void>,
-        outputProp: AnalyzedCounterOutput | null,
+        analyzerOutput: AnalyzedCounterOutput | null,
     },
 ) {
     const [text, setText] = useState("LAC是个优秀的分词工具...");
@@ -19,47 +19,12 @@ function TextAnalyzer(
 
     return (
         <>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: 20,
-            }}>
-                <div>
-                    <div style={{ marginBottom: 10 }}>
-                        <Button type="default" onClick={onAnalyzerInit}>
-                            Init Analyzer
-                        </Button>
-                    </div>
-
-                    <div style={{ marginBottom: 10 }}>
-                        <Checkbox checked={true} disabled={true}>Ignore punctuation</Checkbox>
-                    </div>
-
-                    <TextArea
-                        rows={3}
-                        style={{ marginBottom: 10 }}
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                    ></TextArea>
-
-                    <Button
-                        type="primary"
-                        style={{ marginRight: 5 }}
-                        onClick={handleAnalyzeClick}
-                    >
-                        Analyze
-                    </Button>
-                </div>
-
-                <div>
-                    {/* <FileAnalyzer
-
-                    ></FileAnalyzer> */}
-                </div>
-            </div>
+            {!analyzerOutput
+                ? <div> Drop file here to analyze </div>
+                : null }
 
             <TextAnalyzerOutput
-                analyzerOutput={outputProp}
+                analyzerOutput={analyzerOutput}
             ></TextAnalyzerOutput>
         </>
     );

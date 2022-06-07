@@ -39,11 +39,8 @@ fn filter_from_str(words: &mut Vec<String>, filter_str: &str) {
 fn analyze_text(analyzer: tauri::State<'_, Analyzer>, text: String) -> AnalyzedCounterOutput {
   let punctuation_chars = "\n\r,.:()!@[]+/\\！?？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃《》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.?;﹔|.-·-*─\''\"";
   
-let now = Instant::now();
   let str = text.clone();
   let words = analyzer.instance.lock().unwrap().cut(&str, false);
-let elapsed = now.elapsed();
-println!("[jieba::cut]: Elapsed: {:.2?}", elapsed);
 
   let mut unique_words = words.clone();
   filter_unique2(&mut unique_words);
