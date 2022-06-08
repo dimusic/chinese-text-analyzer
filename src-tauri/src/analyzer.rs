@@ -3,9 +3,7 @@ use std::sync::Mutex;
 use jieba_rs::Jieba;
 use serde::{Serialize, Deserialize};
 
-use crate::{utils::{filter_chars, filter_unique}};
-
-static PUNCTUATION_CHARS_STR: &str = ",.:()!@[]+/\\！?？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃《》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.?;﹔|.-·-*─\''\"";
+use crate::{utils::{filter_unique, normalize_text}};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AnalyzedCounterOutput {
@@ -19,22 +17,19 @@ pub struct AnalyzedCounterOutput {
 
 pub struct Analyzer {
     pub instance: Mutex<Jieba>,
-    punctuation_chars: Vec<char>,
 }
 
 impl Analyzer {
     pub fn new() -> Self {
-        let punctuation_chars: Vec<char> = PUNCTUATION_CHARS_STR.chars().into_iter().collect();
-
         Self {
             instance: Mutex::new(Jieba::new()),
-            punctuation_chars
         }
     }
 
     pub fn analyze(&self, text: &str) -> AnalyzedCounterOutput {
+        let text = normalize_text(&text, false);
+
         let chars: Vec<char> = text.chars().collect();
-        let chars = filter_chars(&chars, &self.punctuation_chars);
 
         let mut unique_chars = chars.clone();
         filter_unique(&mut unique_chars);
@@ -45,6 +40,7 @@ impl Analyzer {
         let mut unique_words = words.clone();
         filter_unique(&mut unique_words);
         let mut unique_words: Vec<String> = unique_words.into_iter()
+            // .filter(|&w| { w != " " && w != "\r\n" })
             .map(|w| { w.to_owned() })
             .collect();
         unique_words.sort_by_key(|w| { w.to_owned() });
