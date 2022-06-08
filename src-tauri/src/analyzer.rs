@@ -9,12 +9,12 @@ static PUNCTUATION_CHARS_STR: &str = ",.:()!@[]+/\\！?？｡。＂＃＄％＆�
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AnalyzedCounterOutput {
-  pub chars_count: usize,
-  pub unique_chars_count: usize,
-  pub words_count: usize,
-  pub words: Vec<String>,
-  pub unique_words_count: usize,
-  pub unique_words: Vec<String>,
+    pub chars_count: usize,
+    pub unique_chars_count: usize,
+    pub words_count: usize,
+    pub words: Vec<String>,
+    pub unique_words_count: usize,
+    pub unique_words: Vec<String>,
 }
 
 pub struct Analyzer {
