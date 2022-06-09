@@ -1,5 +1,7 @@
 use std::{collections::HashSet, hash::Hash};
 
+use lazy_static::lazy_static;
+use regex::Regex;
 use unicode_general_category::{GeneralCategory, get_general_category};
 use unicode_normalization::UnicodeNormalization;
 
@@ -22,12 +24,20 @@ pub fn filter_from_str(words: &mut Vec<String>, filter_str: &str) {
 }
 
 pub fn normalize_text(text: &str, filter_punctuation: bool) -> String {
+    lazy_static! {
+        static ref REGEX_EXTRA_SPACES: Regex = Regex::new(r"[\s]+").unwrap();
+    }
+
+    let text = REGEX_EXTRA_SPACES.replace_all(text, " ");
+
     if !filter_punctuation {
         return text.nfkd().collect();
     }
     
     text.nfkd().filter(|c| {
         match get_general_category(*c) {
+            GeneralCategory::LineSeparator |
+            GeneralCategory::ParagraphSeparator |
             GeneralCategory::DashPunctuation |
             GeneralCategory::OpenPunctuation |
             GeneralCategory::ClosePunctuation |
@@ -35,15 +45,17 @@ pub fn normalize_text(text: &str, filter_punctuation: bool) -> String {
             GeneralCategory::InitialPunctuation |
             GeneralCategory::ConnectorPunctuation |
             GeneralCategory::OtherPunctuation |
-            GeneralCategory::MathSymbol |
+            GeneralCategory::Format |
+            GeneralCategory::Control |
+            GeneralCategory::SpacingMark |
             GeneralCategory::NonspacingMark |
             GeneralCategory::EnclosingMark |
-            GeneralCategory::CurrencySymbol |
-            GeneralCategory::ModifierSymbol |
-            GeneralCategory::OtherSymbol |
             GeneralCategory::Unassigned |
-            GeneralCategory::LineSeparator |
-            GeneralCategory::ParagraphSeparator => false,
+            GeneralCategory::OtherSymbol |
+            GeneralCategory::ModifierSymbol |
+            GeneralCategory::CurrencySymbol |
+            GeneralCategory::Surrogate |
+            GeneralCategory::MathSymbol => false,
             _ => true
         }
     }).collect()

@@ -58,6 +58,8 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "jieba-rs",
+ "lazy_static",
+ "regex",
  "serde",
  "serde_json",
  "tauri",

@@ -19,6 +19,8 @@ tauri = { version = "1.0.0-rc.14", features = ["api-all"] }
 jieba-rs = "0.6"
 unicode-normalization = "0.1.19"
 unicode-general-category = "0.5.1"
+regex = "1"
+lazy_static = "1.4.0"
 
 [features]
 # by default Tauri runs in production mode

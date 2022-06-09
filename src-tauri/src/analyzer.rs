@@ -27,7 +27,7 @@ impl Analyzer {
     }
 
     pub fn analyze(&self, text: &str) -> AnalyzedCounterOutput {
-        let text = normalize_text(&text, false);
+        let text = normalize_text(&text, true);
 
         let chars: Vec<char> = text.chars().collect();
 
@@ -40,7 +40,7 @@ impl Analyzer {
         let mut unique_words = words.clone();
         filter_unique(&mut unique_words);
         let mut unique_words: Vec<String> = unique_words.into_iter()
-            // .filter(|&w| { w != " " && w != "\r\n" })
+            .filter(|&w| { w != " " })
             .map(|w| { w.to_owned() })
             .collect();
         unique_words.sort_by_key(|w| { w.to_owned() });

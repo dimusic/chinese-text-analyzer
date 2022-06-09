@@ -14,8 +14,7 @@ use analyzer::{Analyzer, AnalyzedCounterOutput};
 fn analyze_file(analyzer: tauri::State<'_, Analyzer>, file_path: String) -> AnalyzedCounterOutput {
     println!("{}", file_path);
     
-    let text = fs::read_to_string(file_path)
-    .unwrap();
+    let text = fs::read_to_string(file_path).unwrap();
     
     analyzer.analyze(&text)
 }
