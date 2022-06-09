@@ -10,7 +10,7 @@ use std::fs;
 
 use analyzer::{Analyzer, AnalyzedCounterOutput};
 
-#[tauri::command]
+#[tauri::command(async)]
 fn analyze_file(analyzer: tauri::State<'_, Analyzer>, file_path: String) -> AnalyzedCounterOutput {
     println!("{}", file_path);
     
@@ -25,8 +25,7 @@ fn main() {
     .manage(Analyzer::new())
     .invoke_handler(tauri::generate_handler![
         analyze_file
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
-    }
-    
+    ])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}

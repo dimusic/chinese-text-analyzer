@@ -60,7 +60,8 @@
         "resizable": true,
         "title": "Chinese Text Analyzer",
         "width": 800,
-        "fileDropEnabled": true
+        "fileDropEnabled": true,
+        "decorations": true
       }
     ]
   }
