@@ -6,7 +6,7 @@ authors = ["Dmitry Malkov <dmitry.malkov@live.com>"]
 license = "MIT OR Apache-2.0"
 keywords = ["text-analyzer", "chinese", "nlp"]
 categories = ["text-processing"]
-description = "Rust version of Baidu's LAC (Lexical Analysis of Chinese)"
+description = "Simple Chinese text analyzer"
 
 # [build]
 # rustflags = ["-C", "link-args=-Wl,-rpath,/Users/dmalkov/Documents/biba-ltd/rust/paddle-wrapper/paddle_c_2.3/paddle/lib"]
