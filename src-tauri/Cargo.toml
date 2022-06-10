@@ -1,11 +1,11 @@
 [package]
-name = "app"
+name = "chinese-text-analyzer-tauri"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Chinese Text Analyzer"
+authors = ["Dmitry Malkov <dmitry.malkov@live.com>"]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "chinese-text-analyzer-tauri"
 edition = "2021"
 rust-version = "1.57"
 
