@@ -14,6 +14,7 @@ async function tauriAnalyzeFile(filePath: string): Promise<AnalyzedCounterOutput
 function TextAnalyzerHoc() {
     const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
     const [isFileDropHovering, setIsFileDropHovering] = useState<boolean>(false);
+    const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
 
     const analyzerInitCallback = useCallback(() => {
         async function tauriAnalyzerInit(): Promise<void> {
@@ -43,10 +44,20 @@ function TextAnalyzerHoc() {
             return await listen("tauri://file-drop", async (event) => {
                 console.log('file-drop', event);
                 const filePath = (event.payload as string[])[0];
-
-                let output = await tauriAnalyzeFile(filePath);
-                setOutput(output);
+                
                 setIsFileDropHovering(false);
+                setIsAnalyzing(true);
+
+                try {
+                    let output = await tauriAnalyzeFile(filePath);
+                    setOutput(output);
+                }
+                catch(e) {
+                    console.error("Failed to analyze file", e);
+                }
+                finally {
+                    setIsAnalyzing(false);
+                }
             });
         };
 
@@ -103,6 +114,7 @@ function TextAnalyzerHoc() {
                     onAnalyze={analyzeTextCallback}
                     onAnalyzerInit={analyzerInitCallback}
                     analyzerOutput={output}
+                    isAnalyzing={isAnalyzing}
                 ></TextAnalyzer>
             </div>
         </>

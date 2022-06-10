@@ -1,29 +1,50 @@
-import { List } from "antd";
+import { List, Skeleton } from "antd";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 
-function TextAnalyzerOutput({ analyzerOutput }: { analyzerOutput: AnalyzedCounterOutput | null } ) {
-    if (!analyzerOutput) {
+function TextAnalyzerOutput(
+    { analyzerOutput, useSkeleton }: {
+        analyzerOutput: AnalyzedCounterOutput | null,
+        useSkeleton?: boolean,
+    }
+) {
+    if (!analyzerOutput && !useSkeleton) {
         return null;
     }
 
     console.log('analyzerOutput', analyzerOutput);
 
+    const charsCount = useSkeleton
+        ? <Skeleton.Input active size="small" />
+        : analyzerOutput?.chars_count;
+    
+    const uniqueCharsCount = useSkeleton
+        ? <Skeleton.Input active size="small" />
+        : analyzerOutput?.unique_chars_count;
+    
+    const wordsCount = useSkeleton
+        ? <Skeleton.Input active size="small" />
+        : analyzerOutput?.words_count;
+
+    const uniqueWordsCount = useSkeleton
+        ? <Skeleton.Input active size="small" />
+        : analyzerOutput?.unique_words_count;
+
     return (
         <div>
-            <div>
-                <strong>Character Count:</strong> {analyzerOutput.chars_count}
+            <div style={{ marginBottom: 5 }}>
+                <strong>Character Count:</strong> {charsCount}
             </div>
-            <div>
-                <strong>Unique Character Count:</strong> {analyzerOutput.unique_chars_count}
+            <div style={{ marginBottom: 5 }}>
+                <strong>Unique Character Count:</strong> {uniqueCharsCount}
             </div>
-            <div>
-                <strong>Words Count:</strong> {analyzerOutput.words_count}
+            <div style={{ marginBottom: 5 }}>
+                <strong>Words Count:</strong> {wordsCount}
             </div>
-            <div>
-                <strong>Unique Words Count:</strong> {analyzerOutput.unique_words_count}
+            <div style={{ marginBottom: 5 }}>
+                <strong>Unique Words Count:</strong> {uniqueWordsCount}
             </div>
 
-            <List
+            {analyzerOutput && <List
                 rowKey={word => word}
                 size="small"
                 header={<div>Unique Words:</div>}
@@ -31,7 +52,7 @@ function TextAnalyzerOutput({ analyzerOutput }: { analyzerOutput: AnalyzedCounte
                 bordered
                 dataSource={analyzerOutput.unique_words}
                 renderItem={word => <List.Item>{word}</List.Item>}
-            />
+            />}
         </div>
     );
 }
