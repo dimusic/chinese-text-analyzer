@@ -26,8 +26,8 @@ impl Analyzer {
         }
     }
 
-    pub fn analyze(&self, text: &str) -> AnalyzedCounterOutput {
-        let text = normalize_text(&text, true);
+    pub fn analyze(&self, text: &str, filter_punctuation: bool) -> AnalyzedCounterOutput {
+        let text = normalize_text(&text, filter_punctuation);
 
         let chars: Vec<char> = text.chars().collect();
 

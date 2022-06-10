@@ -11,12 +11,16 @@ use std::fs;
 use analyzer::{Analyzer, AnalyzedCounterOutput};
 
 #[tauri::command]
-async fn analyze_file(analyzer: tauri::State<'_, Analyzer>, file_path: String) -> Result<AnalyzedCounterOutput, bool> {
+async fn analyze_file(
+    analyzer: tauri::State<'_, Analyzer>,
+    file_path: String,
+    filter_punctuation: bool,
+) -> Result<AnalyzedCounterOutput, bool> {
     println!("{}", file_path);
     
     let text = fs::read_to_string(file_path).unwrap();
     
-    Ok(analyzer.analyze(&text))
+    Ok(analyzer.analyze(&text, filter_punctuation))
 }
 
 fn main() {

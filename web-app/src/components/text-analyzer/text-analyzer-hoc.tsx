@@ -1,12 +1,16 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
+import { Checkbox } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 import FileDropOverlay from "./file-drop-overlay";
 import TextAnalyzer from "./text-analyzer";
 
-async function tauriAnalyzeFile(filePath: string): Promise<AnalyzedCounterOutput> {
-    let output: AnalyzedCounterOutput = await invoke("analyze_file", { filePath });
+async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): Promise<AnalyzedCounterOutput> {
+    let output: AnalyzedCounterOutput = await invoke("analyze_file", {
+        filePath,
+        filterPunctuation,
+    });
     
     return output;
 }
@@ -15,6 +19,7 @@ function TextAnalyzerHoc() {
     const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
     const [isFileDropHovering, setIsFileDropHovering] = useState<boolean>(false);
     const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+    const [filterPunctuation, setFilterPunctuation] = useState<boolean>(true);
 
     const analyzerInitCallback = useCallback(() => {
         async function tauriAnalyzerInit(): Promise<void> {
@@ -49,7 +54,7 @@ function TextAnalyzerHoc() {
                 setIsAnalyzing(true);
 
                 try {
-                    let output = await tauriAnalyzeFile(filePath);
+                    let output = await tauriAnalyzeFile(filePath, filterPunctuation);
                     setOutput(output);
                 }
                 catch(e) {
@@ -67,7 +72,7 @@ function TextAnalyzerHoc() {
         return () => {
             listener.then((unsub: any) => unsub());
         };
-    }, []);
+    }, [filterPunctuation]);
 
     useEffect(() => {
         const createTauriFileDropHoverListener = async () => {
@@ -108,6 +113,17 @@ function TextAnalyzerHoc() {
             {isFileDropHovering
                 ? <FileDropOverlay></FileDropOverlay>
                 : null}
+
+            <div>
+                <h5>Settings</h5>
+
+                <div>
+                    <Checkbox
+                        checked={filterPunctuation}
+                        onChange={(e) => setFilterPunctuation(e.target.checked)}
+                    >Remove Punctuation</Checkbox>
+                </div>
+            </div>
 
             <div style={{ padding: 20 }}>
                 <TextAnalyzer
