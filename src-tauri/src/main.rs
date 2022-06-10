@@ -20,11 +20,19 @@ async fn analyze_file(analyzer: tauri::State<'_, Analyzer>, file_path: String) -
 }
 
 fn main() {
+    let submenu = tauri::Menu::new()
+        .add_native_item(tauri::MenuItem::Copy)
+        .add_native_item(tauri::MenuItem::Paste);
+    
+    let menu = tauri::Menu::new()
+        .add_submenu(tauri::Submenu::new("Chinese Text Analyzer", submenu));
+    
     tauri::Builder::default()
-    .manage(Analyzer::new())
-    .invoke_handler(tauri::generate_handler![
-        analyze_file
-    ])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+        .menu(menu)
+        .manage(Analyzer::new())
+        .invoke_handler(tauri::generate_handler![
+            analyze_file
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }
