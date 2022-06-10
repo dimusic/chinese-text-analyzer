@@ -10,13 +10,13 @@ use std::fs;
 
 use analyzer::{Analyzer, AnalyzedCounterOutput};
 
-#[tauri::command(async)]
-fn analyze_file(analyzer: tauri::State<'_, Analyzer>, file_path: String) -> AnalyzedCounterOutput {
+#[tauri::command]
+async fn analyze_file(analyzer: tauri::State<'_, Analyzer>, file_path: String) -> Result<AnalyzedCounterOutput, bool> {
     println!("{}", file_path);
     
     let text = fs::read_to_string(file_path).unwrap();
     
-    analyzer.analyze(&text)
+    Ok(analyzer.analyze(&text))
 }
 
 fn main() {
