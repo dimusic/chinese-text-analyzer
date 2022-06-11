@@ -1,6 +1,6 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Checkbox } from "antd";
+import { Checkbox, Col, Divider, Row } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 import FileDropOverlay from "./file-drop-overlay";
@@ -114,24 +114,33 @@ function TextAnalyzerHoc() {
                 ? <FileDropOverlay></FileDropOverlay>
                 : null}
 
-            <div>
-                <h5>Settings</h5>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+            }}>
+                <div style={{ flexGrow: 0, marginBottom: 20 }}>
+                    <Divider orientation="left">Settings</Divider>
 
-                <div>
-                    <Checkbox
-                        checked={filterPunctuation}
-                        onChange={(e) => setFilterPunctuation(e.target.checked)}
-                    >Remove Punctuation</Checkbox>
+                    <div style={{ padding: '0 20px' }}>
+                        <Checkbox
+                            checked={filterPunctuation}
+                            onChange={(e) => setFilterPunctuation(e.target.checked)}
+                        >Remove Punctuation</Checkbox>
+                    </div>
                 </div>
-            </div>
 
-            <div style={{ padding: 20 }}>
-                <TextAnalyzer
-                    onAnalyze={analyzeTextCallback}
-                    onAnalyzerInit={analyzerInitCallback}
-                    analyzerOutput={output}
-                    isAnalyzing={isAnalyzing}
-                ></TextAnalyzer>
+                <div style={{
+                    flexGrow: 1,
+                    display: 'flex',
+                }}>
+                    <TextAnalyzer
+                        onAnalyze={analyzeTextCallback}
+                        onAnalyzerInit={analyzerInitCallback}
+                        analyzerOutput={output}
+                        isAnalyzing={isAnalyzing}
+                    ></TextAnalyzer>
+                </div>
             </div>
         </>
     );

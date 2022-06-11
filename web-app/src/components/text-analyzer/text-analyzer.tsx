@@ -27,10 +27,23 @@ function TextAnalyzer(
         );
     }
 
+    const renderEmpty = () => (
+        <div style={{
+            flexGrow: 1,
+            border: '10px dashed #afafaf',
+            padding: '10px 20px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}>
+            Drop file here to analyze
+        </div>
+    );
+
     return (
         <>
             {!analyzerOutput
-                ? <div> Drop file here to analyze </div>
+                ? renderEmpty()
                 : null }
 
             <TextAnalyzerOutput

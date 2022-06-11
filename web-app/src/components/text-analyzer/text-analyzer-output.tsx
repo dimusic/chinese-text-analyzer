@@ -30,7 +30,10 @@ function TextAnalyzerOutput(
         : analyzerOutput?.unique_words_count;
 
     return (
-        <div>
+        <div style={{
+            padding: '0 20px',
+            flexGrow: 1,
+        }}>
             <div style={{ marginBottom: 5 }}>
                 <strong>Character Count:</strong> {charsCount}
             </div>
