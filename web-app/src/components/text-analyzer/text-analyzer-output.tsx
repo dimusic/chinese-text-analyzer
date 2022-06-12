@@ -1,4 +1,5 @@
 import { List, Skeleton } from "antd";
+import { memo } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 
 function TextAnalyzerOutput(
@@ -60,4 +61,4 @@ function TextAnalyzerOutput(
     );
 }
 
-export default TextAnalyzerOutput;
+export default memo(TextAnalyzerOutput);
