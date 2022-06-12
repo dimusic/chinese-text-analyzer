@@ -26,7 +26,8 @@ async fn analyze_file(
 fn main() {
     let submenu = tauri::Menu::new()
         .add_native_item(tauri::MenuItem::Copy)
-        .add_native_item(tauri::MenuItem::Paste);
+        .add_native_item(tauri::MenuItem::Paste)
+        .add_native_item(tauri::MenuItem::Quit);
     
     let menu = tauri::Menu::new()
         .add_submenu(tauri::Submenu::new("Chinese Text Analyzer", submenu));
