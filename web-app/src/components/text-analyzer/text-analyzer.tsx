@@ -24,7 +24,7 @@ function TextAnalyzer(
     const renderEmpty = () => (
         <div style={{
             flexGrow: 1,
-            border: '10px dashed #afafaf',
+            border: '5px dashed #afafaf',
             padding: '10px 20px',
             display: 'flex',
             justifyContent: 'center',

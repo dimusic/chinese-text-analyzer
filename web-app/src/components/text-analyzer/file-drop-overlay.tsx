@@ -21,7 +21,7 @@ function FileDropOverlay({ isValid }: FileDropOverlayProps) {
             width: '100%',
             height: '100%',
             background: 'rgba(0, 0, 0, 0.9)',
-            border: `10px dashed ${borderColor}`,
+            border: `5px dashed ${borderColor}`,
         }}>
             {isValid
                 ? <Text strong style={{ color: '#fff' }}>Drop file to analyze</Text>
