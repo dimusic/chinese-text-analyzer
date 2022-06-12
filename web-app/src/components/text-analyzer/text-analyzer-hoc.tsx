@@ -1,10 +1,12 @@
-import { listen } from "@tauri-apps/api/event";
+import { listen, Event } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Checkbox, Col, Divider, Row } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 import FileDropOverlay from "./file-drop-overlay";
 import TextAnalyzer from "./text-analyzer";
+
+const SUPPORTED_TEXT_FORMATS = ['txt'];
 
 async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): Promise<AnalyzedCounterOutput> {
     let output: AnalyzedCounterOutput = await invoke("analyze_file", {
@@ -20,31 +22,10 @@ function TextAnalyzerHoc() {
     const [isFileDropHovering, setIsFileDropHovering] = useState<boolean>(false);
     const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
     const [filterPunctuation, setFilterPunctuation] = useState<boolean>(true);
-
-    const analyzerInitCallback = useCallback(() => {
-        async function tauriAnalyzerInit(): Promise<void> {
-            return await invoke("initialize_analyzer");
-        }
-
-        return tauriAnalyzerInit();
-    }, []);
-
-    const analyzeTextCallback = useCallback((text: string) => {
-        async function tauriAnalyzeText_jieba(text: string): Promise<void> {
-            console.log('tauriAnalyzeText_jieba');
-            let output: AnalyzedCounterOutput = await invoke("analyze_using_jieba", { text: text });
-        
-            setOutput(output);
-        }
-
-        tauriAnalyzeText_jieba(text)
-            .catch(console.error);
-    }, []);
+    const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     
+    //tauri://file-drop
     useEffect(() => {
-        //tauri://file-drop-hover
-        //tauri://file-drop-cancelled
-
         const createTauriFileDropListener = async () => {
             return await listen("tauri://file-drop", async (event) => {
                 console.log('file-drop', event);
@@ -52,6 +33,7 @@ function TextAnalyzerHoc() {
                 
                 setIsFileDropHovering(false);
                 setIsAnalyzing(true);
+                setIsDragAndDropValid(true);
 
                 try {
                     let output = await tauriAnalyzeFile(filePath, filterPunctuation);
@@ -72,14 +54,31 @@ function TextAnalyzerHoc() {
         return () => {
             listener.then((unsub: any) => unsub());
         };
-    }, [filterPunctuation]);
+    }, [filterPunctuation, setIsDragAndDropValid]);
 
+    //tauri://file-drop-hover
     useEffect(() => {
         const createTauriFileDropHoverListener = async () => {
-            return await listen("tauri://file-drop-hover", async (event) => {
+            return await listen<string[]>("tauri://file-drop-hover", async (event) => {
                 console.log('file-drop-hover:', event);
+                const files = event.payload;
 
                 setIsFileDropHovering(true);
+                
+                if (files.length > 1) {
+                    setIsDragAndDropValid(false);
+                    return;
+                }
+
+                const fileExt = files[0].indexOf('.') > -1
+                    && files[0].split('.').pop();
+
+                if (!fileExt || !SUPPORTED_TEXT_FORMATS.includes(fileExt)) {
+                    setIsDragAndDropValid(false);
+                    return;
+                }
+
+                setIsDragAndDropValid(true);
             });
         };
 
@@ -89,8 +88,9 @@ function TextAnalyzerHoc() {
         return () => {
             listener.then((unsub: any) => unsub());
         };
-    }, []);
+    }, [setIsDragAndDropValid]);
 
+    //tauri://file-drop-cancelled
     useEffect(() => {
         const createTauriFileDropHoverListener = async () => {
             return await listen("tauri://file-drop-cancelled", async (event) => {
@@ -111,7 +111,7 @@ function TextAnalyzerHoc() {
     return (
         <>
             {isFileDropHovering
-                ? <FileDropOverlay></FileDropOverlay>
+                ? <FileDropOverlay isValid={isDragAndDropValid}></FileDropOverlay>
                 : null}
 
             <div style={{
@@ -135,8 +135,6 @@ function TextAnalyzerHoc() {
                     display: 'flex',
                 }}>
                     <TextAnalyzer
-                        onAnalyze={analyzeTextCallback}
-                        onAnalyzerInit={analyzerInitCallback}
                         analyzerOutput={output}
                         isAnalyzing={isAnalyzing}
                     ></TextAnalyzer>
