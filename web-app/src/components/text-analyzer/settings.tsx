@@ -21,19 +21,22 @@ function Settings({ settings, isRefreshRequired, onChange, onRefresh }: Settings
     };
 
     return (
-        // <div>
-            <div style={{ padding: '0 20px' }}>
-                <Space>
-                    <Checkbox
-                        checked={settings.filterPunctuation}
-                        onChange={(e) => onSettingChange('filterPunctuation', e.target.checked)}
-                    >Remove Punctuation</Checkbox>
+        <div style={{
+            padding: '0 20px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        }}>
+            <Space>
+                <Checkbox
+                    checked={settings.filterPunctuation}
+                    onChange={(e) => onSettingChange('filterPunctuation', e.target.checked)}
+                >Remove Punctuation</Checkbox>
+            </Space>
 
-                    {isRefreshRequired &&
-                        <Button type="primary" onClick={e => onRefresh()}>Refresh</Button>}
-                </Space>
-            </div>
-        // </div>
+            {isRefreshRequired &&
+                <Button type="primary" onClick={e => onRefresh()}>Refresh</Button>}
+        </div>
     );
 }
 
