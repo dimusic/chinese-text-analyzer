@@ -5,9 +5,10 @@ use regex::Regex;
 use unicode_general_category::{GeneralCategory, get_general_category};
 use unicode_normalization::UnicodeNormalization;
 
+#[allow(dead_code)]
 pub fn filter_chars(chars: &[char], filter_chars: &[char]) -> Vec<char> {
-    chars.clone().into_iter().filter(|&&c| {
-        filter_chars.iter().find(|&&fc| { fc == c }).is_none()
+    chars.iter().filter(|&&c| {
+        !filter_chars.iter().any(|&fc| { fc == c })
     }).map(|c| { c.to_owned() }).collect()
 }
 
@@ -17,6 +18,7 @@ where T: Eq + Hash + Clone {
   col.retain(|e| unique.insert(e.clone()));
 }
 
+#[allow(dead_code)]
 pub fn filter_from_str(words: &mut Vec<String>, filter_str: &str) {
     words.retain(|w| {
         !filter_str.contains(w)
