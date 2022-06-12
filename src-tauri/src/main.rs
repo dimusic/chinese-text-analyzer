@@ -24,13 +24,19 @@ async fn analyze_file(
 }
 
 fn main() {
-    let submenu = tauri::Menu::new()
-        .add_native_item(tauri::MenuItem::Copy)
-        .add_native_item(tauri::MenuItem::Paste)
-        .add_native_item(tauri::MenuItem::Quit);
-    
-    let menu = tauri::Menu::new()
-        .add_submenu(tauri::Submenu::new("Chinese Text Analyzer", submenu));
+    #[allow(unused_mut)]
+    let mut menu = tauri::Menu::new();
+
+    #[cfg(target_os = "macos")]
+    {
+        let submenu = tauri::Menu::new()
+            .add_native_item(tauri::MenuItem::Copy)
+            .add_native_item(tauri::MenuItem::Paste)
+            .add_native_item(tauri::MenuItem::Quit);
+        
+        menu = tauri::Menu::new()
+            .add_submenu(tauri::Submenu::new("Chinese Text Analyzer", submenu));
+    }
     
     tauri::Builder::default()
         .menu(menu)
