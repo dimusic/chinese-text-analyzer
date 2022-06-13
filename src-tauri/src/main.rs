@@ -7,6 +7,7 @@ mod utils;
 mod analyzer;
 
 use std::fs;
+use window_shadows::set_shadow;
 
 use analyzer::{Analyzer, AnalyzedCounterOutput};
 
@@ -39,6 +40,9 @@ fn main() {
     }
     
     tauri::Builder::default()
+        .on_page_load(|window, _payload| {
+            set_shadow(&window, true);
+        })
         .menu(menu)
         .manage(Analyzer::new())
         .invoke_handler(tauri::generate_handler![

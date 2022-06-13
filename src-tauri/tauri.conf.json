@@ -61,7 +61,7 @@
         "title": "Chinese Text Analyzer",
         "width": 800,
         "fileDropEnabled": true,
-        "decorations": true
+        "decorations": false
       }
     ]
   }

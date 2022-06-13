@@ -21,6 +21,7 @@ unicode-normalization = "0.1.19"
 unicode-general-category = "0.5.1"
 regex = "1"
 lazy_static = "1.4.0"
+window-shadows = "0.1.3"
 
 [features]
 # by default Tauri runs in production mode
