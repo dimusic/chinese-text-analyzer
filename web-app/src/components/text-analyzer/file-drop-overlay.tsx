@@ -19,7 +19,7 @@ function FileDropOverlay({ isValid }: FileDropOverlayProps) {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            height: 'calc(100% - 30px)',
+            height: '100%',
             background: 'rgba(0, 0, 0, 0.9)',
             border: `5px dashed ${borderColor}`,
         }}>
