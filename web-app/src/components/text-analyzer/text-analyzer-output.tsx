@@ -1,4 +1,4 @@
-import { List, Skeleton } from "antd";
+import { Col, List, Row, Skeleton, Statistic } from "antd";
 import { memo } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
 
@@ -35,18 +35,39 @@ function TextAnalyzerOutput(
             padding: '0 20px',
             flexGrow: 1,
         }}>
-            <div style={{ marginBottom: 5 }}>
-                <strong>Character Count:</strong> {charsCount}
-            </div>
-            <div style={{ marginBottom: 5 }}>
-                <strong>Unique Character Count:</strong> {uniqueCharsCount}
-            </div>
-            <div style={{ marginBottom: 5 }}>
-                <strong>Words Count:</strong> {wordsCount}
-            </div>
-            <div style={{ marginBottom: 5 }}>
-                <strong>Unique Words Count:</strong> {uniqueWordsCount}
-            </div>
+            <Row gutter={16} style={{ marginBottom: 20 }}>
+                <Col span={6}>
+                    <Statistic
+                        title="Total Characters"
+                        value={analyzerOutput?.chars_count}
+                        loading={useSkeleton}
+                    ></Statistic>
+                </Col>
+
+                <Col span={6}>
+                    <Statistic
+                        title="Unique Characters"
+                        value={analyzerOutput?.unique_chars_count}
+                        loading={useSkeleton}
+                    ></Statistic>
+                </Col>
+
+                <Col span={6}>
+                    <Statistic
+                        title="Total Words"
+                        value={analyzerOutput?.words_count}
+                        loading={useSkeleton}
+                    ></Statistic>
+                </Col>
+
+                <Col span={6}>
+                    <Statistic
+                        title="Unique Words"
+                        value={analyzerOutput?.unique_words_count}
+                        loading={useSkeleton}
+                    ></Statistic>
+                </Col>
+            </Row>
 
             {analyzerOutput && <List
                 rowKey={word => word}
