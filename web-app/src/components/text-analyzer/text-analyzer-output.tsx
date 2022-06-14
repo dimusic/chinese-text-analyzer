@@ -1,6 +1,23 @@
-import { Col, List, Row, Skeleton, Statistic } from "antd";
-import { memo } from "react";
+import { Button, Col, Modal, Row, Statistic } from "antd";
+import TextArea from "antd/lib/input/TextArea";
+import { memo, useState } from "react";
 import { AnalyzedCounterOutput } from "../../common/analyzer-output";
+import './text-analyzer-output.css';
+
+function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
+    switch(outputType) {
+        case 'unique_chars':
+            return 'Unique Characters';
+        break;
+        
+        case 'unique_words':
+            return 'Unique Words';
+        break;
+
+        default:
+            return '';
+    }
+}
 
 function TextAnalyzerOutput(
     { analyzerOutput, useSkeleton }: {
@@ -8,30 +25,45 @@ function TextAnalyzerOutput(
         useSkeleton?: boolean,
     }
 ) {
+    const [detailedViewType, setDetailedViewType] = useState<'unique_chars' | 'unique_words' | null>(null);
+
     if (!analyzerOutput && !useSkeleton) {
         return null;
     }
 
+    const renderDetailsModal = () => {
+        if (!analyzerOutput || !detailedViewType) {
+            return null;
+        }
+
+        const content = (analyzerOutput[detailedViewType] as string[]).join('\n');
+
+        return (
+            <Modal
+                title={detailedOutputTypeToTitle(detailedViewType)}
+                centered
+                visible={Boolean(detailedViewType)}
+                width={1000}
+                onCancel={() => setDetailedViewType(null)}
+                footer={[
+                    <Button key="close" type="default" onClick={() => setDetailedViewType(null)}>
+                        Close
+                    </Button>,
+                ]}
+            >
+                <TextArea
+                    value={content}
+                    rows={6}
+                    readOnly={true}
+                ></TextArea>
+            </Modal>
+        );
+    }
+
     console.log('analyzerOutput', analyzerOutput);
 
-    const charsCount = useSkeleton
-        ? <Skeleton.Input active size="small" />
-        : analyzerOutput?.chars_count;
-    
-    const uniqueCharsCount = useSkeleton
-        ? <Skeleton.Input active size="small" />
-        : analyzerOutput?.unique_chars_count;
-    
-    const wordsCount = useSkeleton
-        ? <Skeleton.Input active size="small" />
-        : analyzerOutput?.words_count;
-
-    const uniqueWordsCount = useSkeleton
-        ? <Skeleton.Input active size="small" />
-        : analyzerOutput?.unique_words_count;
-
     return (
-        <div style={{
+        <div className="text-analyzer-output" style={{
             padding: '0 20px',
             flexGrow: 1,
         }}>
@@ -49,7 +81,11 @@ function TextAnalyzerOutput(
                         title="Unique Characters"
                         value={analyzerOutput?.unique_chars_count}
                         loading={useSkeleton}
+                        style={{ marginBottom: 15 }}
                     ></Statistic>
+
+                    {analyzerOutput?.unique_chars_count &&
+                        <Button type="primary" onClick={() => setDetailedViewType('unique_chars')}>Show</Button>}
                 </Col>
 
                 <Col span={6}>
@@ -65,19 +101,15 @@ function TextAnalyzerOutput(
                         title="Unique Words"
                         value={analyzerOutput?.unique_words_count}
                         loading={useSkeleton}
+                        style={{ marginBottom: 15 }}
                     ></Statistic>
+
+                    {analyzerOutput?.unique_chars_count &&
+                        <Button type="primary" onClick={() => setDetailedViewType('unique_words')}>Show</Button>}
                 </Col>
             </Row>
 
-            {analyzerOutput && <List
-                rowKey={word => word}
-                size="small"
-                header={<div>Unique Words:</div>}
-                footer={null}
-                bordered
-                dataSource={analyzerOutput.unique_words}
-                renderItem={word => <List.Item>{word}</List.Item>}
-            />}
+            {renderDetailsModal()}
         </div>
     );
 }
