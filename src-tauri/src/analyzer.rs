@@ -9,8 +9,8 @@ use crate::{utils::{filter_unique, normalize_text}};
 pub struct AnalyzedCounterOutput {
     pub chars_count: usize,
     pub unique_chars_count: usize,
+    pub unique_chars: Vec<char>,
     pub words_count: usize,
-    pub words: Vec<String>,
     pub unique_words_count: usize,
     pub unique_words: Vec<String>,
 }
@@ -50,8 +50,8 @@ impl Analyzer {
         AnalyzedCounterOutput {
             chars_count: chars.len(),
             unique_chars_count: unique_chars.len(),
+            unique_chars,
             words_count: words.len(),
-            words,
             unique_words_count: unique_words.len(),
             unique_words,
         }
