@@ -83,6 +83,10 @@ function TextAnalyzerHoc() {
                 console.log('file-drop-hover:', event);
                 const files = event.payload;
 
+                if (files.length === 0) {
+                    return;
+                }
+
                 setIsFileDropHovering(true);
                 
                 if (files.length > 1) {
