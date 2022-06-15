@@ -1,18 +1,18 @@
-import { Button, Col, Modal, Row, Statistic } from "antd";
+import { Button, Col, Modal, Row, Statistic, Table } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { ColumnsType } from "antd/lib/table";
 import { memo, useState } from "react";
-import { AnalyzerOutput } from "../../common/analyzer-output";
+import { AnalyzerOutput } from "../../interface/analyzer-output";
+import { HskTableRow } from "../../interface/hsk-table-data";
 import './text-analyzer-output.css';
 
 function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
     switch(outputType) {
         case 'unique_chars':
             return 'Unique Characters';
-        break;
         
         case 'unique_words':
             return 'Unique Words';
-        break;
 
         default:
             return '';
@@ -58,7 +58,32 @@ function TextAnalyzerOutput(
                 ></TextArea>
             </Modal>
         );
-    }
+    };
+
+    const hskTableColumns: ColumnsType<HskTableRow> = [{
+        title: 'HSK Level',
+        dataIndex: 'level',
+        key: 'level',
+        render: (_, record) => (
+            <div>
+                {record.level > 0
+                    ? record.level
+                    : '–' }
+            </div>
+        )
+    }, {
+        title: 'Count',
+        dataIndex: 'count',
+        key: 'count',
+    }];
+    let hskTableData: HskTableRow[] = Object.keys(analyzerOutput?.hsk_analysis || {}).map((lvl) => {
+        return {
+            level: parseInt(lvl, 10),
+            count: analyzerOutput?.hsk_analysis[lvl] as number,
+        };
+    });
+
+    hskTableData.sort((a, b) => b.level - a.level);
 
     console.log('analyzerOutput', analyzerOutput);
 
@@ -108,6 +133,12 @@ function TextAnalyzerOutput(
                         <Button type="primary" onClick={() => setDetailedViewType('unique_words')}>Show</Button>}
                 </Col>
             </Row>
+
+            <Table
+                columns={hskTableColumns}
+                dataSource={hskTableData}
+                pagination={false}
+            />
 
             {renderDetailsModal()}
         </div>

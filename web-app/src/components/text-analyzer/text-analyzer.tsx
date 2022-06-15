@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import { AnalyzerOutput } from '../../common/analyzer-output';
+import { AnalyzerOutput } from '../../interface/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 const { Text } = Typography;

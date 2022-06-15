@@ -18,6 +18,7 @@ async fn analyze_file(
 ) -> Result<AnalyzedCounterOutput, bool> {
     println!("{}", file_path);
     
+    //@TODO handle failure
     let text = fs::read_to_string(file_path).unwrap();
     
     Ok(analyzer.analyze(&text, filter_punctuation))

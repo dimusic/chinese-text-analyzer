@@ -2,7 +2,7 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Divider } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { AnalyzerOutput } from "../../common/analyzer-output";
+import { AnalyzerOutput } from "../../interface/analyzer-output";
 import { TextAnalyzerSettings } from "../../interface/text-analyzer-settings";
 import FileDropOverlay from "./file-drop-overlay";
 import Settings from "./settings";
