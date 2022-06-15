@@ -4,7 +4,7 @@ export interface LacOutputItem {
 }
 
 export interface HskAnalysis {
-    [k: number]: number;
+    [k: string]: number;
 }
 
 export interface AnalyzerOutput {
