@@ -1,9 +1,30 @@
-use std::sync::Mutex;
+use std::{sync::Mutex, collections::HashMap};
 
 use jieba_rs::Jieba;
 use serde::{Serialize, Deserialize};
 
 use crate::{utils::{filter_unique, normalize_text}};
+
+
+fn get_hsk_analysis(words: &Vec<String>) -> HashMap<u8, i64> {
+    let hsk_list = hsk::Hsk::new();
+    let mut res: HashMap<u8, i64> = HashMap::new();
+    res.insert(0, 0);
+    res.insert(1, 0);
+    res.insert(2, 0);
+    res.insert(3, 0);
+    res.insert(4, 0);
+    res.insert(5, 0);
+    res.insert(6, 0);
+
+    words.iter().for_each(|word| {
+        let hsk_level: u8 = hsk_list.get_hsk(word);
+
+        *res.entry(hsk_level).or_insert(0) += 1;
+    });
+
+    res
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AnalyzedCounterOutput {
@@ -13,6 +34,7 @@ pub struct AnalyzedCounterOutput {
     pub words_count: usize,
     pub unique_words_count: usize,
     pub unique_words: Vec<String>,
+    pub hsk_analysis: HashMap<u8, i64>,
 }
 
 pub struct Analyzer {
@@ -47,6 +69,8 @@ impl Analyzer {
 
         let words: Vec<String> = words.into_iter().map(|w| { w.to_owned() }).collect();
 
+        let hsk_analysis = get_hsk_analysis(&unique_words);
+        
         AnalyzedCounterOutput {
             chars_count: chars.len(),
             unique_chars_count: unique_chars.len(),
@@ -54,6 +78,7 @@ impl Analyzer {
             words_count: words.len(),
             unique_words_count: unique_words.len(),
             unique_words,
+            hsk_analysis,
         }
     }
 }
