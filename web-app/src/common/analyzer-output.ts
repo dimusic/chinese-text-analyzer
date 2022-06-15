@@ -7,7 +7,7 @@ export interface HskAnalysis {
     [k: number]: number;
 }
 
-export interface AnalyzedCounterOutput {
+export interface AnalyzerOutput {
     chars_count: number;
     unique_chars_count: number;
     unique_chars: string[];

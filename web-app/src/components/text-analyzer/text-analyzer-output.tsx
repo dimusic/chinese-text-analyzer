@@ -1,7 +1,7 @@
 import { Button, Col, Modal, Row, Statistic } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { memo, useState } from "react";
-import { AnalyzedCounterOutput } from "../../common/analyzer-output";
+import { AnalyzerOutput } from "../../common/analyzer-output";
 import './text-analyzer-output.css';
 
 function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
@@ -21,7 +21,7 @@ function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') 
 
 function TextAnalyzerOutput(
     { analyzerOutput, useSkeleton }: {
-        analyzerOutput: AnalyzedCounterOutput | null,
+        analyzerOutput: AnalyzerOutput | null,
         useSkeleton?: boolean,
     }
 ) {

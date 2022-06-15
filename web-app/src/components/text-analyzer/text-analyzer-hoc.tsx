@@ -2,7 +2,7 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Divider } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { AnalyzedCounterOutput } from "../../common/analyzer-output";
+import { AnalyzerOutput } from "../../common/analyzer-output";
 import { TextAnalyzerSettings } from "../../interface/text-analyzer-settings";
 import FileDropOverlay from "./file-drop-overlay";
 import Settings from "./settings";
@@ -10,8 +10,8 @@ import TextAnalyzer from "./text-analyzer";
 
 const SUPPORTED_TEXT_FORMATS = ['txt'];
 
-async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): Promise<AnalyzedCounterOutput> {
-    let output: AnalyzedCounterOutput = await invoke("analyze_file", {
+async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
+    let output: AnalyzerOutput = await invoke("analyze_file", {
         filePath,
         filterPunctuation,
     });
@@ -20,7 +20,7 @@ async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): P
 }
 
 function TextAnalyzerHoc() {
-    const [output, setOutput] = useState<AnalyzedCounterOutput | null>(null);
+    const [output, setOutput] = useState<AnalyzerOutput | null>(null);
     const [filePath, setFilePath] = useState<string | null>(null);
     const [isFileDropHovering, setIsFileDropHovering] = useState<boolean>(false);
     const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);

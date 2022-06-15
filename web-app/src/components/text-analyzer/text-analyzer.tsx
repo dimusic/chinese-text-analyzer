@@ -1,11 +1,11 @@
 import { Typography } from 'antd';
-import { AnalyzedCounterOutput } from '../../common/analyzer-output';
+import { AnalyzerOutput } from '../../common/analyzer-output';
 import TextAnalyzerOutput from './text-analyzer-output';
 
 const { Text } = Typography;
 
 interface TextAnalyzerProps {
-    analyzerOutput: AnalyzedCounterOutput | null,
+    analyzerOutput: AnalyzerOutput | null,
     isAnalyzing: boolean,
 }
 
