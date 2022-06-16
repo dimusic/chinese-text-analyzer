@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Row, Statistic, Table } from "antd";
+import { Button, Col, Divider, Modal, Row, Statistic, Table, Typography } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { ColumnsType } from "antd/lib/table";
 import { memo, useState } from "react";
@@ -64,6 +64,7 @@ function TextAnalyzerOutput(
         title: 'HSK Level',
         dataIndex: 'level',
         key: 'level',
+        align: 'center',
         render: (_, record) => (
             <div>
                 {record.level > 0
@@ -75,15 +76,50 @@ function TextAnalyzerOutput(
         title: 'Count',
         dataIndex: 'count',
         key: 'count',
+        align: 'center',
+    }, {
+        title: 'Cumulative Frequency',
+        dataIndex: 'cumFreq',
+        key: 'cumFreq',
+        align: 'center',
+        render: (_, record) => (
+            <div>
+                {record.cumFreq.toFixed(2)} %
+            </div>
+        )
     }];
-    let hskTableData: HskTableRow[] = Object.keys(analyzerOutput?.hsk_analysis || {}).map((lvl) => {
+
+    let hskTableData: HskTableRow[] = Object.keys(analyzerOutput?.hsk_analysis || {})
+        .sort((a, b) => {
+            if (a === '0' || b === '0') {
+                return -1;
+            }
+
+            return parseInt(a, 10) - parseInt(b, 10)
+        })
+        .map(lvl => {
+            return {
+                level: parseInt(lvl, 10),
+                count: analyzerOutput?.hsk_analysis[lvl] as number,
+                cumFreq: 0,
+            };
+        });
+    
+    hskTableData = hskTableData.map((row, i) => {
+        let cum = 0;
+
+        if (i === 0) {
+            cum = row.count / analyzerOutput!.unique_words_count;
+        }
+        else {
+            cum = row.count / analyzerOutput!.unique_words_count + hskTableData[i - 1].cumFreq;
+        }
+
         return {
-            level: parseInt(lvl, 10),
-            count: analyzerOutput?.hsk_analysis[lvl] as number,
+            ...row,
+            cumFreq: cum * 100,
         };
     });
-
-    hskTableData.sort((a, b) => b.level - a.level);
 
     console.log('analyzerOutput', analyzerOutput);
 
@@ -134,11 +170,20 @@ function TextAnalyzerOutput(
                 </Col>
             </Row>
 
-            <Table
-                columns={hskTableColumns}
-                dataSource={hskTableData}
-                pagination={false}
-            />
+            <Divider></Divider>
+
+            <Row gutter={16}>
+                <Col span={12}>
+                    <Typography.Title level={4}>HSK Breakdown</Typography.Title>
+
+                    <Table
+                        columns={hskTableColumns}
+                        dataSource={hskTableData}
+                        pagination={false}
+                        size={'small'}
+                    />
+                </Col>
+            </Row>
 
             {renderDetailsModal()}
         </div>
