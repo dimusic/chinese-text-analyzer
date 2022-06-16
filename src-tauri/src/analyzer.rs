@@ -6,7 +6,7 @@ use serde::{Serialize, Deserialize};
 use crate::{utils::{filter_unique, normalize_text}};
 
 
-fn get_hsk_analysis(words: &[String]) -> HashMap<u8, i64> {
+fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
     let hsk_list = hsk::Hsk::new();
     let mut res: HashMap<u8, i64> = HashMap::new();
     res.insert(0, 0);
@@ -67,7 +67,7 @@ impl Analyzer {
             .collect();
         unique_words.sort_by_key(|w| { w.to_owned() });
 
-        let hsk_analysis = get_hsk_analysis(&unique_words);
+        let hsk_analysis = get_hsk_analysis(&words);
         
         AnalyzedCounterOutput {
             chars_count: chars.len(),

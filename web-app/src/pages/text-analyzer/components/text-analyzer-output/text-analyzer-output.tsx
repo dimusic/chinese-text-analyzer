@@ -84,7 +84,7 @@ function TextAnalyzerOutput(
         align: 'center',
         render: (_, record) => (
             <div>
-                {record.cumFreq.toFixed(2)} %
+                {(record.cumFreq * 100).toFixed(2)} %
             </div>
         )
     }];
@@ -105,20 +105,17 @@ function TextAnalyzerOutput(
             };
         });
     
-    hskTableData = hskTableData.map((row, i) => {
-        let cum = 0;
+    hskTableData.forEach((row, i) => {
+        let cumFreq = 0;
 
         if (i === 0) {
-            cum = row.count / analyzerOutput!.unique_words_count;
+            cumFreq = row.count / analyzerOutput!.words_count;
         }
         else {
-            cum = row.count / analyzerOutput!.unique_words_count + hskTableData[i - 1].cumFreq;
+            cumFreq = row.count / analyzerOutput!.words_count + hskTableData[i - 1].cumFreq;
         }
 
-        return {
-            ...row,
-            cumFreq: cum * 100,
-        };
+        hskTableData[i].cumFreq = cumFreq;
     });
 
     console.log('analyzerOutput', analyzerOutput);
