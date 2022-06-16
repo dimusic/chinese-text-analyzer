@@ -1,9 +1,8 @@
-import { Button, Col, Divider, Modal, Row, Statistic, Table, Typography } from "antd";
+import { Button, Col, Divider, Modal, Row, Statistic, Typography } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { ColumnsType } from "antd/lib/table";
 import { memo, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
-import { HskTableRow } from "../../../../models/hsk-table-data";
+import HskBreakdownTable from "./hsk-breakdown-table";
 import './text-analyzer-output.css';
 
 function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
@@ -60,64 +59,6 @@ function TextAnalyzerOutput(
         );
     };
 
-    const hskTableColumns: ColumnsType<HskTableRow> = [{
-        title: 'HSK Level',
-        dataIndex: 'level',
-        key: 'level',
-        align: 'center',
-        render: (_, record) => (
-            <div>
-                {record.level > 0
-                    ? record.level
-                    : '–' }
-            </div>
-        )
-    }, {
-        title: 'Count',
-        dataIndex: 'count',
-        key: 'count',
-        align: 'center',
-    }, {
-        title: 'Cumulative Frequency',
-        dataIndex: 'cumFreq',
-        key: 'cumFreq',
-        align: 'center',
-        render: (_, record) => (
-            <div>
-                {(record.cumFreq * 100).toFixed(2)} %
-            </div>
-        )
-    }];
-
-    let hskTableData: HskTableRow[] = Object.keys(analyzerOutput?.hsk_analysis || {})
-        .sort((a, b) => {
-            if (a === '0' || b === '0') {
-                return -1;
-            }
-
-            return parseInt(a, 10) - parseInt(b, 10)
-        })
-        .map(lvl => {
-            return {
-                level: parseInt(lvl, 10),
-                count: analyzerOutput?.hsk_analysis[lvl] as number,
-                cumFreq: 0,
-            };
-        });
-    
-    hskTableData.forEach((row, i) => {
-        let cumFreq = 0;
-
-        if (i === 0) {
-            cumFreq = row.count / analyzerOutput!.words_count;
-        }
-        else {
-            cumFreq = row.count / analyzerOutput!.words_count + hskTableData[i - 1].cumFreq;
-        }
-
-        hskTableData[i].cumFreq = cumFreq;
-    });
-
     console.log('analyzerOutput', analyzerOutput);
 
     return (
@@ -173,12 +114,10 @@ function TextAnalyzerOutput(
                 <Col span={12}>
                     <Typography.Title level={4}>HSK Breakdown</Typography.Title>
 
-                    <Table
-                        columns={hskTableColumns}
-                        dataSource={hskTableData}
-                        pagination={false}
-                        size={'small'}
-                    />
+                    <HskBreakdownTable
+                        hskAnalysis={analyzerOutput?.hsk_analysis}
+                        totalWordsCount={analyzerOutput?.words_count || 0}
+                    ></HskBreakdownTable>
                 </Col>
             </Row>
 
