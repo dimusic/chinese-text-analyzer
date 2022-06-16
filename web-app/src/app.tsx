@@ -1,11 +1,11 @@
 import "antd/dist/antd.css";
 import './app.css';
-import TextAnalyzerHoc from './components/text-analyzer/text-analyzer-hoc';
+import TextAnalyzerPage from "./pages/text-analyzer/text-analyzer.page";
 
 function App() {
   return (
     <div className="app">
-      <TextAnalyzerHoc></TextAnalyzerHoc>
+      <TextAnalyzerPage></TextAnalyzerPage>
     </div>
   )
 }

@@ -2,8 +2,8 @@ import { Button, Col, Divider, Modal, Row, Statistic, Table, Typography } from "
 import TextArea from "antd/lib/input/TextArea";
 import { ColumnsType } from "antd/lib/table";
 import { memo, useState } from "react";
-import { AnalyzerOutput } from "../../interface/analyzer-output";
-import { HskTableRow } from "../../interface/hsk-table-data";
+import { AnalyzerOutput } from "../../../../models/analyzer-output";
+import { HskTableRow } from "../../../../models/hsk-table-data";
 import './text-analyzer-output.css';
 
 function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {

@@ -2,11 +2,11 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Divider } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { AnalyzerOutput } from "../../interface/analyzer-output";
-import { TextAnalyzerSettings } from "../../interface/text-analyzer-settings";
-import FileDropOverlay from "./file-drop-overlay";
-import Settings from "./settings";
-import TextAnalyzer from "./text-analyzer";
+import { AnalyzerOutput } from "../../models/analyzer-output";
+import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
+import FileDropOverlay from "./components/file-drop-overlay";
+import Settings from "./components/settings";
+import TextAnalyzer from "./components/text-analyzer";
 
 const SUPPORTED_TEXT_FORMATS = ['txt'];
 
@@ -19,7 +19,7 @@ async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): P
     return output;
 }
 
-function TextAnalyzerHoc() {
+function TextAnalyzerPage() {
     const [output, setOutput] = useState<AnalyzerOutput | null>(null);
     const [filePath, setFilePath] = useState<string | null>(null);
     const [isFileDropHovering, setIsFileDropHovering] = useState<boolean>(false);
@@ -47,7 +47,6 @@ function TextAnalyzerHoc() {
     useEffect(() => {
         const createTauriFileDropListener = async () => {
             return await listen("tauri://file-drop", async (event) => {
-                console.log('file-drop', event);
                 const eventFilePath = (event.payload as string[])[0];
 
                 setFilePath(eventFilePath);
@@ -80,7 +79,6 @@ function TextAnalyzerHoc() {
     useEffect(() => {
         const createTauriFileDropHoverListener = async () => {
             return await listen<string[]>("tauri://file-drop-hover", async (event) => {
-                console.log('file-drop-hover:', event);
                 const files = event.payload;
 
                 if (files.length === 0) {
@@ -118,8 +116,6 @@ function TextAnalyzerHoc() {
     useEffect(() => {
         const createTauriFileDropHoverListener = async () => {
             return await listen("tauri://file-drop-cancelled", async (event) => {
-                console.log('file-drop-cancelled:', event);
-
                 setIsFileDropHovering(false);
             });
         };
@@ -168,4 +164,4 @@ function TextAnalyzerHoc() {
     );
 }
 
-export default TextAnalyzerHoc;
+export default TextAnalyzerPage;

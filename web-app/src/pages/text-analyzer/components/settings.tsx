@@ -1,7 +1,5 @@
 import { Button, Checkbox, Space } from "antd";
-import { MouseEvent } from "react";
-import { TextAnalyzerSettings } from "../../interface/text-analyzer-settings";
-
+import { TextAnalyzerSettings } from "../../../models/text-analyzer-settings";
 
 interface SettingsProps {
     settings: TextAnalyzerSettings;
