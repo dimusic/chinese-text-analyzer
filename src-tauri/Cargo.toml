@@ -10,12 +10,12 @@ edition = "2021"
 rust-version = "1.57"
 
 [build-dependencies]
-tauri-build = { version = "1.0.0-rc.14", features = [] }
+tauri-build = { version = "1.0.0", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.0.0-rc.16", features = ["api-all"] }
+tauri = { version = "1.0.0", features = ["api-all"] }
 jieba-rs = "0.6"
 unicode-normalization = "0.1.19"
 unicode-general-category = "0.5.1"
