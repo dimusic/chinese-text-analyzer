@@ -1,14 +1,14 @@
-import { Button, Checkbox, Space } from "antd";
+import { Button, Checkbox } from "antd";
 import { TextAnalyzerSettings } from "../../../models/text-analyzer-settings";
 
 interface SettingsProps {
     settings: TextAnalyzerSettings;
     isRefreshRequired: boolean;
     onChange: (settings: TextAnalyzerSettings) => void;
-    onRefresh: () => void;
+    onApply: () => void;
 }
 
-function Settings({ settings, isRefreshRequired, onChange, onRefresh }: SettingsProps) {
+function Settings({ settings, isRefreshRequired, onChange, onApply }: SettingsProps) {
     const onSettingChange = (name: string, value: any) => {
         const updatedSettings = {
             ...settings,
@@ -21,19 +21,16 @@ function Settings({ settings, isRefreshRequired, onChange, onRefresh }: Settings
     return (
         <div style={{
             padding: '0 20px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
         }}>
-            <Space>
+            <div style={{ marginBottom: 20 }}>
                 <Checkbox
                     checked={settings.filterPunctuation}
                     onChange={(e) => onSettingChange('filterPunctuation', e.target.checked)}
                 >Remove Punctuation</Checkbox>
-            </Space>
+            </div>
 
             {isRefreshRequired &&
-                <Button type="primary" onClick={e => onRefresh()}>Refresh</Button>}
+                <Button type="primary" onClick={e => onApply()}>Apply</Button>}
         </div>
     );
 }

@@ -1,6 +1,7 @@
+import { SettingTwoTone } from "@ant-design/icons";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Divider } from "antd";
+import { Affix, Divider, Drawer, Typography } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { AnalyzerOutput } from "../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
@@ -28,6 +29,15 @@ function TextAnalyzerPage() {
         filterPunctuation: true,
     });
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
+    const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+
+    const showSettingsDrawer = () => {
+        setIsSettingsVisible(true);
+    };
+
+    const closeSettingsDrawer = () => {
+        setIsSettingsVisible(false);
+    };
 
     const refresh = useCallback(async () => {
         setIsAnalyzing(true);
@@ -139,16 +149,20 @@ function TextAnalyzerPage() {
                 flexDirection: 'column',
                 height: '100%',
             }}>
-                <div style={{ flexGrow: 0, marginBottom: 20 }}>
-                    <Divider orientation="left">Settings</Divider>
+                <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+                    <Typography.Link onClick={showSettingsDrawer}>
+                        <SettingTwoTone style={{ fontSize: 22 }} />
+                    </Typography.Link>
+                </Affix>
 
+                <Drawer title="Settings" placement="right" onClose={closeSettingsDrawer} visible={isSettingsVisible}>
                     <Settings
                         settings={settings}
                         isRefreshRequired={output !== null}
-                        onRefresh={refresh}
+                        onApply={refresh}
                         onChange={(settings) => setSettings(settings)}
                     />
-                </div>
+                </Drawer>
 
                 <div style={{
                     flexGrow: 1,

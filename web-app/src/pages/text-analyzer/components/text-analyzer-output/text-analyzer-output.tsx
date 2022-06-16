@@ -63,7 +63,7 @@ function TextAnalyzerOutput(
 
     return (
         <div className="text-analyzer-output" style={{
-            padding: '0 20px',
+            padding: '20px 20px 15px',
             flexGrow: 1,
         }}>
             <Row gutter={16} style={{ marginBottom: 20 }}>
