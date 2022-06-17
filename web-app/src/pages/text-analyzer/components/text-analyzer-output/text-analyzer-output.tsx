@@ -1,7 +1,7 @@
-import { Button, Col, Divider, Modal, Row, Statistic, Typography } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import { Button, Col, Divider, Row, Statistic, Typography } from "antd";
 import { memo, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
+import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
 import './text-analyzer-output.css';
 
@@ -38,24 +38,12 @@ function TextAnalyzerOutput(
         const content = (analyzerOutput[detailedViewType] as string[]).join('\n');
 
         return (
-            <Modal
+            <DetailsModal
                 title={detailedOutputTypeToTitle(detailedViewType)}
-                centered
                 visible={Boolean(detailedViewType)}
-                width={1000}
-                onCancel={() => setDetailedViewType(null)}
-                footer={[
-                    <Button key="close" type="default" onClick={() => setDetailedViewType(null)}>
-                        Close
-                    </Button>,
-                ]}
-            >
-                <TextArea
-                    value={content}
-                    rows={6}
-                    readOnly={true}
-                ></TextArea>
-            </Modal>
+                content={content}
+                onClose={() => setDetailedViewType(null)}
+            ></DetailsModal>
         );
     };
 
