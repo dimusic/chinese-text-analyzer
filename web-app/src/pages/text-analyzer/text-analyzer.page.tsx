@@ -1,7 +1,7 @@
 import { SettingTwoTone } from "@ant-design/icons";
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Affix, Divider, Drawer, Typography } from "antd";
+import { Affix, Drawer, Typography } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { AnalyzerOutput } from "../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
@@ -31,14 +31,6 @@ function TextAnalyzerPage() {
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
-    const showSettingsDrawer = () => {
-        setIsSettingsVisible(true);
-    };
-
-    const closeSettingsDrawer = () => {
-        setIsSettingsVisible(false);
-    };
-
     const refresh = useCallback(async () => {
         setIsAnalyzing(true);
         try {
@@ -52,6 +44,21 @@ function TextAnalyzerPage() {
             setIsAnalyzing(false);
         }
     }, [filePath, settings]);
+
+    const updateSettings = useCallback((settings: TextAnalyzerSettings) => {
+        localStorage.setItem('settings', JSON.stringify(settings));
+        console.log('new settings: ', settings);
+        setSettings(settings);
+    }, [settings, setSettings]);
+
+    useEffect(() => {
+        const savedSettings = localStorage.getItem('settings');
+        
+        if (savedSettings) {
+            console.log('restoring settings');
+            setSettings(JSON.parse(savedSettings));
+        }
+    }, []);
     
     //tauri://file-drop
     useEffect(() => {
@@ -150,17 +157,17 @@ function TextAnalyzerPage() {
                 height: '100%',
             }}>
                 <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
-                    <Typography.Link onClick={showSettingsDrawer}>
+                    <Typography.Link onClick={() => setIsSettingsVisible(true)}>
                         <SettingTwoTone style={{ fontSize: 22 }} />
                     </Typography.Link>
                 </Affix>
 
-                <Drawer title="Settings" placement="right" onClose={closeSettingsDrawer} visible={isSettingsVisible}>
+                <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
                     <Settings
                         settings={settings}
                         isRefreshRequired={output !== null}
                         onApply={refresh}
-                        onChange={(settings) => setSettings(settings)}
+                        onChange={updateSettings}
                     />
                 </Drawer>
 
