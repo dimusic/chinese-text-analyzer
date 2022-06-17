@@ -24,7 +24,7 @@ function DetailsModal({ title, visible, content, onClose }: DetailsModalProps) {
         >
             <TextArea
                 value={content}
-                rows={6}
+                rows={15}
                 readOnly={true}
             ></TextArea>
         </Modal>
