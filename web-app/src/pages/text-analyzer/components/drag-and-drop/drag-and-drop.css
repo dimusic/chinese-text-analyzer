@@ -1,0 +1,11 @@
+.drag-container {
+    height: 300px;
+    width: 300px;
+    border: dashed rgb(206, 206, 206) 3px;
+    display: inline-block;
+}
+
+.overlay {
+    border-color: red;
+    background-color: gray;
+}
