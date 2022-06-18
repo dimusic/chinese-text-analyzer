@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { AnalyzerOutput } from "../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
 import DragAndDrop from "./components/drag-and-drop/drag-and-drop";
-import FileAnalyzer from "./components/file-analyzer/file-analyzer";
 import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
