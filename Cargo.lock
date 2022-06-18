@@ -50,6 +50,21 @@ dependencies = [
  "serde_json",
  "unicode-general-category",
  "unicode-normalization",
+]
+
+[[package]]
+name = "analyzer-wasm"
+version = "0.1.0"
+dependencies = [
+ "analyzer",
+ "hsk",
+ "jieba-rs",
+ "lazy_static",
+ "regex",
+ "serde",
+ "serde_json",
+ "unicode-general-category",
+ "unicode-normalization",
  "wasm-bindgen",
  "wasm-bindgen-test",
 ]
@@ -359,6 +374,7 @@ dependencies = [
 name = "chinese-text-analyzer-tauri"
 version = "0.2.0"
 dependencies = [
+ "analyzer",
  "hsk",
  "jieba-rs",
  "lazy_static",

@@ -1,28 +1,17 @@
 [package]
-name = "analyzer-wasm"
+name = "analyzer"
 version = "0.1.0"
 authors = ["Dmitry Malkov <targtn@gmail.com>"]
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib", "rlib"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 jieba-rs = "0.6"
 hsk = "0.1.0"
-wasm-bindgen = "0.2.63"
 unicode-normalization = "0.1.19"
 unicode-general-category = "0.5.1"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 regex = "1"
 lazy_static = "1.4.0"
-
-analyzer = { path = "../analyzer" }
-
-[dev-dependencies]
-wasm-bindgen-test = "0.3.13"
-
-[profile.release]
-# Tell `rustc` to optimize for small code size.
-opt-level = "s"

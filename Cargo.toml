@@ -14,9 +14,10 @@ description = "Simple Chinese text analyzer"
 
 [workspace]
 members = [
-    "crates/paddle-inference-api-sys",
-    "crates/paddle-inference-rust-api",
-    "crates/baidu-lac-rs",
+    # "crates/paddle-inference-api-sys",
+    # "crates/paddle-inference-rust-api",
+    # "crates/baidu-lac-rs",
+    "crates/analyzer",
     "crates/analyzer-wasm",
     "src-tauri",
 ]

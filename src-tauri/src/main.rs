@@ -3,9 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-mod utils;
-mod analyzer;
-
 use std::fs;
 
 use analyzer::{Analyzer, AnalyzedCounterOutput};

@@ -1,8 +1,5 @@
-mod analyzer;
-mod utils;
-
-use analyzer::Analyzer;
 use wasm_bindgen::prelude::*;
+use analyzer::Analyzer;
 
 #[wasm_bindgen]
 pub fn analyze(text: String, filter_punctuation: bool) -> i32 {
