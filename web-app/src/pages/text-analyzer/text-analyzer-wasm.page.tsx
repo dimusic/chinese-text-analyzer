@@ -7,13 +7,11 @@ import DragAndDrop from "../../components/drag-and-drop/drag-and-drop";
 import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
-import init, { analyze } from '../../wasm/analyzer_wasm';
+import { analyze } from '../../wasm/analyzer_wasm';
 
 const SUPPORTED_TEXT_FORMATS = ['txt'];
 
 async function analyzeText(text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
-    await init();
-    
     const output = await analyze(text, filterPunctuation) as AnalyzerOutput;
     console.log('analyzeText output: ', output);
     return output;
@@ -95,9 +93,6 @@ function TextAnalyzerWasmPage() {
                 onCancel={fileHoverCancelCallback}
             >
                 <div>Drag and drop files here</div>
-                <div>
-                    is valid: {JSON.stringify(isDragAndDropValid)}
-                </div>
             </DragAndDrop>
         );
     }
