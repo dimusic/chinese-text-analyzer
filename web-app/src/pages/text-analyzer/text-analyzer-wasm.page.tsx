@@ -57,7 +57,6 @@ function TextAnalyzerWasmPage() {
 
         if (items.length > 1 || item.kind !== 'file' || item.type !== 'text/plain') {
             setIsDragAndDropValid(false);
-            return ;
         }
     }, [dragCounter]);
 
@@ -77,11 +76,14 @@ function TextAnalyzerWasmPage() {
         e.stopPropagation();
     }, []);
 
-    const handleFileAnalyze = useCallback(async (fileName: string, text: string) => {
+    const handleFileAnalyze = useCallback(async (file: File) => {
         if (!isDragAndDropValid) {
             setIsDragAndDropValid(true);
             return ;
         }
+
+        const text = await file.text();
+        const fileName = file.name;
 
         setIsAnalyzing(true);
         setIsDragAndDropValid(true);
@@ -100,7 +102,7 @@ function TextAnalyzerWasmPage() {
         }
     }, [fileName, isDragAndDropValid, settings]);
 
-    const handleFileDrop = useCallback((e: DragEvent) => {
+    const handleFileDrop = (e: DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
         
@@ -109,13 +111,8 @@ function TextAnalyzerWasmPage() {
         const files = e.dataTransfer?.files;
         dragCounter.current = 0;
 
-        const reader = new FileReader();
-        reader.readAsText(files[0]);
-        reader.onload = async ()=> {
-            const text = reader.result as string;
-            handleFileAnalyze(files[0].name, text);
-        };
-    }, []);
+        handleFileAnalyze(files[0]);
+    };
 
     const updateSettings = useCallback((settings: TextAnalyzerSettings) => {
         localStorage.setItem('settings', JSON.stringify(settings));
