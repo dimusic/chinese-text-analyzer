@@ -1,9 +1,10 @@
 import { Button, Col, Divider, PageHeader, Row, Statistic, Typography } from "antd";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
 import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
+import ReactGa from 'react-ga';
 import './text-analyzer-output.css';
 
 function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
@@ -59,6 +60,13 @@ function TextAnalyzerOutput(
             ></DetailsModal>
         );
     };
+
+    useEffect(() => {
+        ReactGa.event({
+            category: 'Analyzer',
+            action: 'Output Generated',
+        });
+    }, [fileName]);
 
     console.log('analyzerOutput', analyzerOutput);
 

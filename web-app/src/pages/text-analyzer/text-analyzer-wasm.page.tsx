@@ -10,7 +10,6 @@ import { analyze } from '../../wasm/analyzer_wasm';
 
 async function analyzeText(text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
     const output = await analyze(text, filterPunctuation) as AnalyzerOutput;
-    console.log('analyzeText output: ', output);
     return output;
 }
 
@@ -128,7 +127,6 @@ function TextAnalyzerWasmPage() {
         const savedSettings = localStorage.getItem('settings');
         
         if (savedSettings) {
-            console.log('restoring settings');
             setSettings(JSON.parse(savedSettings));
         }
     }, []);
