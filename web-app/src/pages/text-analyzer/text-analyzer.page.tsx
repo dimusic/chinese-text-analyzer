@@ -176,6 +176,7 @@ function TextAnalyzerPage() {
                     display: 'flex',
                 }}>
                     <TextAnalyzer
+                        fileName=''
                         analyzerOutput={output}
                         isAnalyzing={isAnalyzing}
                     ></TextAnalyzer>

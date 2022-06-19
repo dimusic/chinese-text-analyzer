@@ -1,6 +1,7 @@
-import { Button, Col, Divider, Row, Statistic, Typography } from "antd";
+import { Button, Col, Divider, PageHeader, Row, Statistic, Typography } from "antd";
 import { memo, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
+import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
 import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
 import './text-analyzer-output.css';
@@ -18,11 +19,23 @@ function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') 
     }
 }
 
+function settingsToString(settings: TextAnalyzerSettings): string {
+    const punctuationSettingStr = settings.filterPunctuation
+        ? 'punctuation removed'
+        : 'punctuation included'
+
+    return punctuationSettingStr;
+}
+
+interface TextAnalyzerOutputProps {
+    fileName: string;
+    analyzerOutput: AnalyzerOutput | null;
+    settings: TextAnalyzerSettings;
+    useSkeleton?: boolean;
+}
+
 function TextAnalyzerOutput(
-    { analyzerOutput, useSkeleton }: {
-        analyzerOutput: AnalyzerOutput | null,
-        useSkeleton?: boolean,
-    }
+    { fileName, analyzerOutput, settings, useSkeleton }: TextAnalyzerOutputProps
 ) {
     const [detailedViewType, setDetailedViewType] = useState<'unique_chars' | 'unique_words' | null>(null);
 
@@ -54,6 +67,12 @@ function TextAnalyzerOutput(
             padding: '20px 20px 15px',
             flexGrow: 1,
         }}>
+            <PageHeader
+                style={{ paddingTop: 0 }}
+                title={fileName}
+                subTitle={`(${settingsToString(settings)})`}
+            ></PageHeader>
+
             <Row gutter={16} style={{ marginBottom: 20 }}>
                 <Col span={6}>
                     <Statistic

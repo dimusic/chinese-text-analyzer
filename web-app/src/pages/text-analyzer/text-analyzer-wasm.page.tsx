@@ -16,6 +16,7 @@ async function analyzeText(text: string, filterPunctuation: boolean): Promise<An
 
 function TextAnalyzerWasmPage() {
     const [output, setOutput] = useState<AnalyzerOutput | null>(null);
+    const [fileName, setFileName] = useState<string>('');
     const [fileContent, setFileContent] = useState<string | null>(null);
     const [showFileDropOverlay, setShowFileDropOverlay] = useState<boolean>(false);
     const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
@@ -77,6 +78,29 @@ function TextAnalyzerWasmPage() {
         e.stopPropagation();
     }, []);
 
+    const handleFileAnalyze = useCallback(async (fileName: string, text: string) => {
+        if (!isDragAndDropValid) {
+            setIsDragAndDropValid(true);
+            return ;
+        }
+
+        setIsAnalyzing(true);
+        setIsDragAndDropValid(true);
+        setFileContent(text);
+        setFileName(fileName);
+
+        try {
+            let output = await analyzeText(text, settings.filterPunctuation);
+            setOutput(output);
+        }
+        catch(e) {
+            console.error("Failed to analyze file", e);
+        }
+        finally {
+            setIsAnalyzing(false);
+        }
+    }, [fileName, isDragAndDropValid, settings]);
+
     const handleFileDrop = useCallback((e: DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -89,28 +113,10 @@ function TextAnalyzerWasmPage() {
         const reader = new FileReader();
         reader.readAsText(files[0]);
         reader.onload = async ()=> {
-            if (!isDragAndDropValid) {
-                setIsDragAndDropValid(true);
-                return ;
-            }
-            
             const text = reader.result as string;
-            setIsAnalyzing(true);
-            setIsDragAndDropValid(true);
-            setFileContent(text);
-    
-            try {
-                let output = await analyzeText(text, settings.filterPunctuation);
-                setOutput(output);
-            }
-            catch(e) {
-                console.error("Failed to analyze file", e);
-            }
-            finally {
-                setIsAnalyzing(false);
-            }
+            handleFileAnalyze(files[0].name, text);
         };
-    }, [isDragAndDropValid, settings]);
+    }, []);
 
     const updateSettings = useCallback((settings: TextAnalyzerSettings) => {
         localStorage.setItem('settings', JSON.stringify(settings));
@@ -164,7 +170,9 @@ function TextAnalyzerWasmPage() {
                     display: 'flex',
                 }}>
                     <TextAnalyzer
+                        fileName={fileName}
                         analyzerOutput={output}
+                        settings={settings}
                         isAnalyzing={isAnalyzing}
                     ></TextAnalyzer>
                 </div>
