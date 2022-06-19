@@ -178,6 +178,7 @@ function TextAnalyzerPage() {
                     <TextAnalyzer
                         fileName=''
                         analyzerOutput={output}
+                        settings={settings}
                         isAnalyzing={isAnalyzing}
                     ></TextAnalyzer>
                 </div>
