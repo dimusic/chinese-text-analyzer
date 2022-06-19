@@ -60,14 +60,44 @@ function TextAnalyzerWasmPage() {
     }, []);
 
     const analyzeCallback = useCallback(async (text: string) => {
-        let output = await analyzeText(text, settings.filterPunctuation);
-        setOutput(output);
-    }, [output, settings, setOutput]);
+        if (!isDragAndDropValid) {
+            setIsFileDropHovering(false);
+            setIsDragAndDropValid(true);
+            return ;
+        }
+        
+        setIsAnalyzing(true);
+        setIsFileDropHovering(false);
+        setIsDragAndDropValid(true);
+
+        try {
+            let output = await analyzeText(text, settings.filterPunctuation);
+            setOutput(output);
+        }
+        catch(e) {
+            console.error("Failed to analyze file", e);
+        }
+        finally {
+            setIsAnalyzing(false);
+        }
+    }, [output, settings, setOutput, isDragAndDropValid, setIsDragAndDropValid, setIsFileDropHovering, setIsAnalyzing]);
+
+    const fileHoverCancelCallback = useCallback(() => {
+        setIsFileDropHovering(false);
+        setIsDragAndDropValid(true);
+    }, [isDragAndDropValid, setIsDragAndDropValid, setIsFileDropHovering]);
 
     if (!output) {
         return (
-            <DragAndDrop processDrop={analyzeCallback}>
+            <DragAndDrop
+                processDrop={analyzeCallback}
+                onHoverInvalid={() => setIsDragAndDropValid(false)}
+                onCancel={fileHoverCancelCallback}
+            >
                 <div>Drag and drop files here</div>
+                <div>
+                    is valid: {JSON.stringify(isDragAndDropValid)}
+                </div>
             </DragAndDrop>
         );
     }
@@ -77,8 +107,6 @@ function TextAnalyzerWasmPage() {
             {isFileDropHovering
                 ? <FileDropOverlay isValid={isDragAndDropValid}></FileDropOverlay>
                 : null}
-
-            
 
             <div style={{
                 display: 'flex',

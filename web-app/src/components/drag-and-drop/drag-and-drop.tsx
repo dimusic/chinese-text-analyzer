@@ -2,12 +2,14 @@ import { DragEvent, ReactNode, useRef, useState } from "react";
 import './drag-and-drop.css';
 
 interface DragAndDropProps {
-    processDrop: (text: string) => void,
-    children?: ReactNode | ReactNode[],
+    processDrop: (text: string) => void;
+    onHoverInvalid: () => void;
+    onCancel: () => void;
+    children?: ReactNode | ReactNode[];
 }
 
 function DragAndDrop(
-    { processDrop, children }: DragAndDropProps
+    { processDrop, onHoverInvalid, onCancel, children }: DragAndDropProps
 ) {
     let [dragOverlay, setDragOverlay] = useState(false);
     const [data, setData] = useState('');
@@ -29,6 +31,16 @@ function DragAndDrop(
         e.stopPropagation();
 
         dragCounter.current++;
+
+        if (e.dataTransfer.items.length > 1) {
+            return onHoverInvalid();
+        }
+
+        const item = e.dataTransfer.items[0];
+        if (item.kind !== 'file' || item.type !== 'text/plain') {
+            return onHoverInvalid();
+        }
+
         if (e.dataTransfer?.items?.length > 0) {
             setDragOverlay(true);
         }
@@ -41,6 +53,7 @@ function DragAndDrop(
         dragCounter.current--;
         if (dragCounter.current === 0) {
             setDragOverlay(false);
+            onCancel();
         }
     };
 
