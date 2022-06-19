@@ -58,10 +58,12 @@ function TextAnalyzerOutput(
     };
 
     useEffect(() => {
-        ReactGa.event({
-            category: 'Analyzer',
-            action: 'Output Generated',
-        });
+        if (fileName.length > 0) {
+            ReactGa.event({
+                category: 'Analyzer',
+                action: 'Output Generated',
+            });
+        }
     }, [fileName]);
 
     if (!analyzerOutput && !useSkeleton) {
