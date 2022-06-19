@@ -40,10 +40,6 @@ function TextAnalyzerOutput(
 ) {
     const [detailedViewType, setDetailedViewType] = useState<'unique_chars' | 'unique_words' | null>(null);
 
-    if (!analyzerOutput && !useSkeleton) {
-        return null;
-    }
-
     const renderDetailsModal = () => {
         if (!analyzerOutput || !detailedViewType) {
             return null;
@@ -67,6 +63,10 @@ function TextAnalyzerOutput(
             action: 'Output Generated',
         });
     }, [fileName]);
+
+    if (!analyzerOutput && !useSkeleton) {
+        return null;
+    }
 
     console.log('analyzerOutput', analyzerOutput);
 
