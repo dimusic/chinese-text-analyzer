@@ -1,0 +1,12 @@
+/crates
+/src
+/src-tauri
+/Cargo.lock
+/Cargo.toml
+/web-app
+/README.md
+/.gitmodules
+/target
+/paddle-lib
+**/lib
+**/lac_models
