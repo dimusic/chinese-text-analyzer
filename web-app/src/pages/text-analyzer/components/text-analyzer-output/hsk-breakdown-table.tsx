@@ -47,11 +47,12 @@ function HskBreakdownTable({ hskAnalysis, totalWordsCount }: HskBreakdownTablePr
 
             return parseInt(a, 10) - parseInt(b, 10)
         })
-        .map(lvl => {
+        .map((lvl, i) => {
             return {
                 level: parseInt(lvl, 10),
                 count: hskAnalysis ? hskAnalysis[lvl] as number : 0,
                 cumFreq: 0,
+                key: `${lvl}_${i}`
             };
         });
     
