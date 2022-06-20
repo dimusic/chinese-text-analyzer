@@ -1,12 +1,19 @@
 import { SettingTwoTone } from "@ant-design/icons";
 import { Affix, Drawer, Typography } from "antd";
 import { DragEvent, useCallback, useEffect, useRef, useState } from "react";
+import languageEncoding from "detect-file-encoding-and-language";
 import { AnalyzerOutput } from "../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
 import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
 import { analyze } from '../../wasm/analyzer_wasm';
+
+async function isUtf8(file: File): Promise<boolean> {
+    const fileInfo = await languageEncoding(file);
+    
+    return fileInfo.encoding === 'UTF-8';
+}
 
 async function analyzeText(text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
     const output = await analyze(text, filterPunctuation) as AnalyzerOutput;
@@ -23,6 +30,7 @@ function TextAnalyzerWasmPage() {
         filterPunctuation: true,
     });
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
+    const [validationError, setValidationError] = useState<string>('');
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
     let dragCounter = useRef(0);
 
@@ -52,6 +60,7 @@ function TextAnalyzerWasmPage() {
         }
 
         setShowFileDropOverlay(true);
+        setValidationError('');
 
         const item = items[0];
 
@@ -79,6 +88,12 @@ function TextAnalyzerWasmPage() {
     const handleFileAnalyze = useCallback(async (file: File) => {
         if (!isDragAndDropValid) {
             setIsDragAndDropValid(true);
+            return ;
+        }
+
+        if (!await isUtf8(file)) {
+            setIsDragAndDropValid(true);
+            setValidationError('Wrong encoding');
             return ;
         }
 
