@@ -7,6 +7,8 @@ import './index.css';
 document.addEventListener('DOMContentLoaded', async () => {
   await init();
 
+  document.getElementById("loader")!.style.display = 'none';
+
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <App />
