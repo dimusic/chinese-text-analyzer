@@ -4,7 +4,6 @@ import { AnalyzerOutput } from "../../../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
 import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
-import ReactGa from 'react-ga';
 import './text-analyzer-output.css';
 
 function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
@@ -56,15 +55,6 @@ function TextAnalyzerOutput(
             ></DetailsModal>
         );
     };
-
-    useEffect(() => {
-        if (fileName.length > 0) {
-            ReactGa.event({
-                category: 'Analyzer',
-                action: 'Output Generated',
-            });
-        }
-    }, [fileName]);
 
     if (!analyzerOutput && !useSkeleton) {
         return null;
