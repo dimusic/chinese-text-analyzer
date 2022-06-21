@@ -1,5 +1,5 @@
 import { SettingTwoTone } from "@ant-design/icons";
-import { Affix, Drawer, Typography } from "antd";
+import { Affix, notification, Drawer, Typography } from "antd";
 import { DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import languageEncoding from "detect-file-encoding-and-language";
 import { AnalyzerOutput } from "../../models/analyzer-output";
@@ -8,6 +8,14 @@ import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
 import { analyze } from '../../wasm/analyzer_wasm';
+
+const showInvalidEncodingMessage = () => {
+    notification.error({
+        message: 'Wrong file encoding',
+        description: 'Only UTF-8 is supported at this time.',
+        placement: "topLeft",
+    })
+};
 
 async function isUtf8(file: File): Promise<boolean> {
     const fileInfo = await languageEncoding(file);
@@ -30,7 +38,6 @@ function TextAnalyzerWasmPage() {
         filterPunctuation: true,
     });
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
-    const [validationError, setValidationError] = useState<string>('');
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
     let dragCounter = useRef(0);
 
@@ -60,7 +67,6 @@ function TextAnalyzerWasmPage() {
         }
 
         setShowFileDropOverlay(true);
-        setValidationError('');
 
         const item = items[0];
 
@@ -93,7 +99,7 @@ function TextAnalyzerWasmPage() {
 
         if (!await isUtf8(file)) {
             setIsDragAndDropValid(true);
-            setValidationError('Wrong encoding');
+            showInvalidEncodingMessage();
             return ;
         }
 
