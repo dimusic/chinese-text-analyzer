@@ -31,7 +31,7 @@ async function analyzeText(text: string, filterPunctuation: boolean): Promise<An
 function TextAnalyzerWasmPage() {
     const [output, setOutput] = useState<AnalyzerOutput | null>(null);
     const [fileName, setFileName] = useState<string>('');
-    const [fileContent, setFileContent] = useState<string | null>(null);
+    const [fileContent, setFileContent] = useState<string>('');
     const [showFileDropOverlay, setShowFileDropOverlay] = useState<boolean>(false);
     const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
     const [settings, setSettings] = useState<TextAnalyzerSettings>({
@@ -41,10 +41,10 @@ function TextAnalyzerWasmPage() {
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
     let dragCounter = useRef(0);
 
-    const refresh = useCallback(async () => {
+    const refresh = useCallback(async (updatedSettings: TextAnalyzerSettings) => {
         setIsAnalyzing(true);
         try {
-            let output = await analyzeText(fileContent as string, settings.filterPunctuation);
+            let output = await analyzeText(fileContent, updatedSettings.filterPunctuation);
             setOutput(output);
         }
         catch(e) {
@@ -53,7 +53,7 @@ function TextAnalyzerWasmPage() {
         finally {
             setIsAnalyzing(false);
         }
-    }, [fileContent, settings]);
+    }, [fileContent]);
 
     const handleDragEnter = useCallback((e: DragEvent) => {
         e.preventDefault();
@@ -135,11 +135,14 @@ function TextAnalyzerWasmPage() {
         handleFileAnalyze(files[0]);
     };
 
-    const updateSettings = useCallback((settings: TextAnalyzerSettings) => {
+    const updateSettings = useCallback((settings: TextAnalyzerSettings, refreshOutput: boolean) => {
         localStorage.setItem('settings', JSON.stringify(settings));
         console.log('new settings: ', settings);
         setSettings(settings);
-    }, [settings, setSettings]);
+        if (refreshOutput) {
+            refresh(settings);
+        }
+    }, [settings, fileContent, setSettings]);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem('settings');
@@ -176,8 +179,7 @@ function TextAnalyzerWasmPage() {
                     <Settings
                         settings={settings}
                         isRefreshRequired={output !== null}
-                        onApply={refresh}
-                        onChange={updateSettings}
+                        onChange={(newSettings, refreshOutput) => updateSettings(newSettings, refreshOutput)}
                     />
                 </Drawer>
 

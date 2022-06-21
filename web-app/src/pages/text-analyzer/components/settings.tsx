@@ -5,11 +5,10 @@ import { TextAnalyzerSettings } from "../../../models/text-analyzer-settings";
 interface SettingsProps {
     settings: TextAnalyzerSettings;
     isRefreshRequired: boolean;
-    onChange: (settings: TextAnalyzerSettings) => void;
-    onApply: () => void;
+    onChange: (settings: TextAnalyzerSettings, refreshOutput: boolean) => void;
 }
 
-function Settings({ settings, isRefreshRequired, onChange, onApply }: SettingsProps) {
+function Settings({ settings, isRefreshRequired, onChange }: SettingsProps) {
     const [tmpSettings, setSettings] = useState<TextAnalyzerSettings>({ filterPunctuation: true });
 
     useEffect(() => {
@@ -25,13 +24,12 @@ function Settings({ settings, isRefreshRequired, onChange, onApply }: SettingsPr
         setSettings(updatedSettings);
 
         if (!isRefreshRequired) {
-            onChange(updatedSettings);
+            onChange(updatedSettings, false);
         }
     };
 
     const handleApply = () => {
-        onChange(tmpSettings);
-        onApply();
+        onChange(tmpSettings, true);
     }
 
     return (
@@ -46,7 +44,7 @@ function Settings({ settings, isRefreshRequired, onChange, onApply }: SettingsPr
             </div>
 
             {isRefreshRequired &&
-                <Button type="primary" onClick={e => handleApply()}>Apply</Button>}
+                <Button type="primary" onClick={handleApply}>Apply</Button>}
         </div>
     );
 }
