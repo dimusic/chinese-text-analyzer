@@ -1,7 +1,7 @@
 {
   "name": "chinese-text-analyzer-frontend",
   "private": true,
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

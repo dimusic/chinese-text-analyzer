@@ -314,7 +314,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chinese-text-analyzer"
-version = "1.0.0-rc.2"
+version = "1.0.0"
 
 [[package]]
 name = "chinese-text-analyzer-tauri"
