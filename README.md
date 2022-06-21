@@ -1,6 +1,8 @@
+# Chinese Text Analyzer/中文文本分析
+Tool to perform simple semantic analysis and gather stats to help measure text comprehension level.
 ## Usage
 Drag and Drop plain text file (.txt) in UTF-8 encoding to the browser window. To analyze a new file repeat drag and drop.
-![](https://github.com/JulyJ/chinese-text-analyzer/blob/master/text_analyzer.gif)
+![usage demo](text_analyzer.gif)
 ## Features
 * Calculates total and unique characters counts in TXT file.
 * Calculates total and unique words counts in TXT file using Jieba word segmentation (“结巴”中文分词).
