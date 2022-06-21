@@ -31,10 +31,10 @@ function TextAnalyzerPage() {
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
-    const refresh = useCallback(async () => {
+    const refresh = useCallback(async (updatedSettings: TextAnalyzerSettings) => {
         setIsAnalyzing(true);
         try {
-            let output = await tauriAnalyzeFile(filePath as string, settings.filterPunctuation);
+            let output = await tauriAnalyzeFile(filePath as string, updatedSettings.filterPunctuation);
             setOutput(output);
         }
         catch(e) {
@@ -43,12 +43,16 @@ function TextAnalyzerPage() {
         finally {
             setIsAnalyzing(false);
         }
-    }, [filePath, settings]);
+    }, [filePath]);
 
-    const updateSettings = useCallback((settings: TextAnalyzerSettings) => {
+    const updateSettings = useCallback((settings: TextAnalyzerSettings, refreshOutput: boolean) => {
         localStorage.setItem('settings', JSON.stringify(settings));
         console.log('new settings: ', settings);
         setSettings(settings);
+
+        if (refreshOutput) {
+            refresh(settings);
+        }
     }, [settings, setSettings]);
 
     useEffect(() => {
@@ -166,8 +170,7 @@ function TextAnalyzerPage() {
                     <Settings
                         settings={settings}
                         isRefreshRequired={output !== null}
-                        onApply={refresh}
-                        onChange={updateSettings}
+                        onChange={(newSettings, refreshOutput) => updateSettings(newSettings, refreshOutput)}
                     />
                 </Drawer>
 
