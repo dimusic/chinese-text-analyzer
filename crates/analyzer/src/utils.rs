@@ -25,18 +25,18 @@ pub fn filter_from_str(words: &mut Vec<String>, filter_str: &str) {
     });
 }
 
-pub fn normalize_text(text: &str, filter_punctuation: bool) -> String {
+pub fn normalize_text(text: &str) -> String {
     lazy_static! {
         static ref REGEX_EXTRA_SPACES: Regex = Regex::new(r"[\s]+").unwrap();
     }
 
     let text = REGEX_EXTRA_SPACES.replace_all(text, " ");
 
-    if !filter_punctuation {
-        return text.nfkd().collect();
-    }
-    
-    text.nfkd().filter(|c| {
+    return text.nfkd().collect();
+}
+
+pub fn filter_text_punctuation(text: &str) -> String {
+    text.chars().filter(|c| {
         match get_general_category(*c) {
             GeneralCategory::LineSeparator |
             GeneralCategory::ParagraphSeparator |

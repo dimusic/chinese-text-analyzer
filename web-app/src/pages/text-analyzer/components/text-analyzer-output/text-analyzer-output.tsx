@@ -53,7 +53,7 @@ function TextAnalyzerOutput(
                 content={content}
                 onClose={() => setDetailedViewType(null)}
             ></DetailsModal>
-        );
+        )
     };
 
     if (!analyzerOutput && !useSkeleton) {
@@ -125,6 +125,15 @@ function TextAnalyzerOutput(
                         hskAnalysis={analyzerOutput?.hsk_analysis}
                         totalWordsCount={analyzerOutput?.words_count || 0}
                     ></HskBreakdownTable>
+                </Col>
+
+                <Col span={12}>
+                    <Statistic
+                        title="Average characters per sentence"
+                        value={analyzerOutput?.avg_chars_per_sentence}
+                        loading={useSkeleton}
+                        style={{ marginBottom: 15 }}
+                    ></Statistic>
                 </Col>
             </Row>
 

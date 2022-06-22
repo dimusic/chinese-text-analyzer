@@ -2,9 +2,11 @@
 use std::{sync::Mutex, collections::HashMap};
 
 use jieba_rs::Jieba;
+use lazy_static::lazy_static;
+use regex::Regex;
 use serde::{Serialize};
 
-use crate::{utils::{filter_unique, normalize_text}};
+use crate::{utils::{filter_unique, normalize_text, filter_text_punctuation}};
 
 
 fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
@@ -27,6 +29,36 @@ fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
     res
 }
 
+fn get_chars_per_sentence(text: &str) -> usize {
+    lazy_static! {
+        static ref REGEX_END_OF_SENTENCE: Regex = Regex::new(r"[。.!\?\r\n]+").unwrap();
+        static ref REGEX_ALL_SPACES: Regex = Regex::new(r"[\s\r\n]+").unwrap();
+    }
+
+    let sentences: Vec<_> = REGEX_END_OF_SENTENCE.split(text)
+        .into_iter()
+        .map(|sentence| {
+            REGEX_ALL_SPACES.replace_all(sentence, "")
+        })
+        .filter(|sentence| { sentence.chars().count() >= 2 })
+        .collect();
+
+        sentences.iter().for_each(|s| println!("{}; len: {}", s, s.chars().count()));
+
+    let total_sentences = sentences.len();
+    let total_chars = sentences.into_iter()
+        .fold(0, |prev, current| {
+            current.chars().count() + prev
+        });
+    
+    if total_sentences > 0 {
+        total_chars / total_sentences
+    }
+    else {
+        0
+    }
+}
+
 #[derive(Debug, Serialize)]
 pub struct AnalyzedCounterOutput {
     pub chars_count: usize,
@@ -36,6 +68,7 @@ pub struct AnalyzedCounterOutput {
     pub unique_words_count: usize,
     pub unique_words: Vec<String>,
     pub hsk_analysis: HashMap<u8, i64>,
+    pub avg_chars_per_sentence: usize,
 }
 
 pub struct Analyzer {
@@ -50,7 +83,13 @@ impl Analyzer {
     }
 
     pub fn analyze(&self, text: &str, filter_punctuation: bool) -> AnalyzedCounterOutput {
-        let text = normalize_text(text, filter_punctuation);
+        let avg_chars_per_sentence = get_chars_per_sentence(&text);
+
+        let mut text = normalize_text(text);
+
+        if filter_punctuation {
+            text = filter_text_punctuation(&text);
+        }
 
         let chars: Vec<char> = text.chars().collect();
 
@@ -78,6 +117,7 @@ impl Analyzer {
             unique_words_count: unique_words.len(),
             unique_words,
             hsk_analysis,
+            avg_chars_per_sentence,
         }
     }
 }
