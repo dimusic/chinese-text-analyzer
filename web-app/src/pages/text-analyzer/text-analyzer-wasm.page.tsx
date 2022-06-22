@@ -7,13 +7,21 @@ import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
 import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
-import { analyze } from '../../wasm/analyzer_wasm';
 import mixpanel from "mixpanel-browser";
+import { useAnalyzerWorker } from "../../analyzer-worker-provider";
 
 const showInvalidEncodingMessage = () => {
     notification.error({
         message: 'Wrong file encoding',
         description: 'Only UTF-8 is supported at this time.',
+        placement: "topLeft",
+    })
+};
+
+const showGenericErrorMessage = () => {
+    notification.error({
+        message: 'Error',
+        description: 'Something went wrong. Try again later',
         placement: "topLeft",
     })
 };
@@ -24,9 +32,17 @@ async function isUtf8(file: File): Promise<boolean> {
     return fileInfo.encoding === 'UTF-8';
 }
 
-async function analyzeText(text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
-    const output = await analyze(text, filterPunctuation) as AnalyzerOutput;
-    return output;
+async function analyzeText(worker: Worker, text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
+    return new Promise((resolve, reject) => {
+        if (!worker) {
+            return reject();
+        }
+
+        worker.postMessage([text, filterPunctuation]);
+        worker.addEventListener('message', (e) => {
+            return resolve(e.data as AnalyzerOutput);
+        });
+    });
 }
 
 function TextAnalyzerWasmPage() {
@@ -40,6 +56,7 @@ function TextAnalyzerWasmPage() {
     });
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+    const worker = useAnalyzerWorker();
     let dragCounter = useRef(0);
 
     const refresh = useCallback(async (updatedSettings: TextAnalyzerSettings) => {
@@ -51,11 +68,12 @@ function TextAnalyzerWasmPage() {
         });
 
         try {
-            let output = await analyzeText(fileContent, updatedSettings.filterPunctuation);
+            let output = await analyzeText(worker, fileContent, updatedSettings.filterPunctuation);
             setOutput(output);
         }
         catch(e) {
             console.error("Failed to analyze file", e);
+            showGenericErrorMessage();
         }
         finally {
             setIsAnalyzing(false);
@@ -135,11 +153,12 @@ function TextAnalyzerWasmPage() {
         });
 
         try {
-            let output = await analyzeText(text, settings.filterPunctuation);
+            let output = await analyzeText(worker, text, settings.filterPunctuation);
             setOutput(output);
         }
         catch(e) {
             console.error("Failed to analyze file", e);
+            showGenericErrorMessage();
         }
         finally {
             setIsAnalyzing(false);

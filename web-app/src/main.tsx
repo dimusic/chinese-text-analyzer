@@ -16,17 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initMixpanel();
 
-  const worker = new Worker(new URL('./wasm-webworker.js', import.meta.url), {
-    type: 'module',
-  });
-
-  if (worker) {
-    worker.postMessage(["《开端》作者：祈祷君", true]);
-    worker.addEventListener('message', (e) => {
-      console.log('output from main: ', e.data);
-    });
-  }
-
   document.getElementById("loader")!.style.display = 'none';
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
