@@ -16,3 +16,20 @@ Drag and Drop plain text file (.txt) in UTF-8 encoding to the browser window. To
   * from Traditional to Simplified
 * Additional semantic analysis (i.e. top 10 names/locations/adjectives/verbs in the text).
 * Copy analysis results to clipboard
+
+## Development
+
+### Dependencies
+[wasm-pack](https://rustwasm.github.io/wasm-pack/)
+### Build
+
+wasm:
+```
+wasm-pack build ./crates/analyzer-wasm --out-dir ../../web-app/src/wasm --target web
+```
+web-app:
+```
+cd web-app
+npm install
+npm run build
+```
