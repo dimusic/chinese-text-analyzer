@@ -23,4 +23,5 @@ members = [
 ]
 
 [dependencies]
+analyzer = { path = "./crates/analyzer" }
 # baidu-lac-rs = { path = "./crates/baidu-lac-rs" }
