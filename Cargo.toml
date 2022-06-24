@@ -8,15 +8,8 @@ keywords = ["text-analyzer", "chinese", "nlp"]
 categories = ["text-processing"]
 description = "Simple Chinese text analyzer"
 
-# [build]
-# rustflags = ["-C", "link-args=-Wl,-rpath,/Users/dmalkov/Documents/biba-ltd/rust/paddle-wrapper/paddle_c_2.3/paddle/lib"]
-# rustflags = ["-C", "link-args=-Wl,-rpath,@executable_path/../lib"]
-
 [workspace]
 members = [
-    # "crates/paddle-inference-api-sys",
-    # "crates/paddle-inference-rust-api",
-    # "crates/baidu-lac-rs",
     "crates/analyzer",
     "crates/analyzer-wasm",
     "src-tauri",
@@ -24,4 +17,3 @@ members = [
 
 [dependencies]
 analyzer = { path = "./crates/analyzer" }
-# baidu-lac-rs = { path = "./crates/baidu-lac-rs" }

@@ -13,12 +13,10 @@
     "@tauri-apps/api": "^1.0.0-rc.6",
     "antd": "^4.20.6",
     "detect-file-encoding-and-language": "^2.2.2",
-    "mixpanel-browser": "^2.45.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@types/mixpanel-browser": "^2.38.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^1.3.0",

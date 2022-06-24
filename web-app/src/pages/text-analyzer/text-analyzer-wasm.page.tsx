@@ -8,7 +8,6 @@ import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
 import { analyze } from '../../wasm/analyzer_wasm';
-import mixpanel from "mixpanel-browser";
 
 const showInvalidEncodingMessage = () => {
     notification.error({
@@ -44,11 +43,6 @@ function TextAnalyzerWasmPage() {
 
     const refresh = useCallback(async (updatedSettings: TextAnalyzerSettings) => {
         setIsAnalyzing(true);
-
-        mixpanel.track('Analyze', {
-            valid: true,
-            refresh: true,
-        });
 
         try {
             let output = await analyzeText(fileContent, updatedSettings.filterPunctuation);
@@ -102,22 +96,12 @@ function TextAnalyzerWasmPage() {
         if (!isDragAndDropValid) {
             setIsDragAndDropValid(true);
             
-            mixpanel.track('Analyze', {
-                valid: false,
-                invalidType: 'invalid_file',
-            });
-            
             return ;
         }
 
         if (!await isUtf8(file)) {
             setIsDragAndDropValid(true);
             showInvalidEncodingMessage();
-            
-            mixpanel.track('Analyze', {
-                valid: false,
-                invalidType: 'invalid_encoding',
-            });
             
             return ;
         }
@@ -129,10 +113,6 @@ function TextAnalyzerWasmPage() {
         setIsDragAndDropValid(true);
         setFileContent(text);
         setFileName(fileName);
-
-        mixpanel.track('Analyze', {
-            valid: true,
-        });
 
         try {
             let output = await analyzeText(text, settings.filterPunctuation);
@@ -160,11 +140,6 @@ function TextAnalyzerWasmPage() {
 
     const updateSettings = useCallback((settings: TextAnalyzerSettings, refreshOutput: boolean) => {
         localStorage.setItem('settings', JSON.stringify(settings));
-        console.log('new settings: ', settings);
-        
-        mixpanel.track('Settings Updated', {
-            settings: settings,
-        });
 
         setSettings(settings);
         if (refreshOutput) {
