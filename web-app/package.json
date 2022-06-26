@@ -1,7 +1,7 @@
 {
   "name": "chinese-text-analyzer-frontend",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",
