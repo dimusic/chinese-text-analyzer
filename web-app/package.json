@@ -4,8 +4,9 @@
   "version": "1.2.0",
   "scripts": {
     "dev": "vite",
+    "dev:host": "vite --host",
     "build": "tsc && vite build",
-    "build.ghpages": "tsc && vite build --config ./vite.config.ghpages.ts",
+    "build:ghpages": "tsc && vite build --config ./vite.config.ghpages.ts",
     "preview": "vite preview"
   },
   "dependencies": {
