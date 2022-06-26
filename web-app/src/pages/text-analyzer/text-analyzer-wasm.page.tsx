@@ -125,6 +125,10 @@ function TextAnalyzerWasmPage() {
                 alignItems: 'center',
             }}>
                 <Typography.Title level={2}>Chinese Text Analyzer</Typography.Title>
+                <Typography.Text type="secondary" style={{ textAlign: 'center', marginBottom: 15 }}>
+                    Calculate total and unique character and word count in a text file, HSK Breakdown and more!
+                </Typography.Text>
+
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
