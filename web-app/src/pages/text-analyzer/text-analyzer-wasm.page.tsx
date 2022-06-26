@@ -1,5 +1,5 @@
 import { SettingTwoTone } from "@ant-design/icons";
-import { Affix, notification, Drawer, Typography } from "antd";
+import { Affix, notification, Drawer, Typography, Button, Divider } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import languageEncoding from "detect-file-encoding-and-language";
 import { AnalyzerOutput } from "../../models/analyzer-output";
@@ -99,43 +99,69 @@ function TextAnalyzerWasmPage() {
         }
     }, []);
 
-    return (
-        <FileDragAndDropContainer
-            onDrop={handleFileAnalyze}
-            validateFn={validateFile}
-            style={{ height: '100%' }}
-        >
+    const renderEmpty = () => {
+        return (
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
+                width: 500,
+                justifyContent: 'center',
+                alignItems: 'center',
             }}>
-                <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
-                    <Typography.Link onClick={() => setIsSettingsVisible(true)}>
-                        <SettingTwoTone style={{ fontSize: 22 }} />
-                    </Typography.Link>
-                </Affix>
-
-                <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
-                    <Settings
-                        settings={settings}
-                        isRefreshRequired={output !== null}
-                        onChange={(newSettings, refreshOutput) => updateSettings(newSettings, refreshOutput)}
-                    />
-                </Drawer>
-
                 <div style={{
-                    flexGrow: 1,
                     display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: 300,
+                    border: '5px dashed #afafaf',
                 }}>
-                    <TextAnalyzer
-                        fileName={fileName}
-                        analyzerOutput={output}
-                        settings={settings}
-                        isAnalyzing={isAnalyzing}
-                    ></TextAnalyzer>
+                    Drag and drop .txt file to analyze
+                </div>
+                <div style={{
+                    width: '100%',
+                    textAlign: 'center',
+                }}>
+                    <Divider type="horizontal">or</Divider>
+                    <Button type="primary">Choose File</Button>
                 </div>
             </div>
+        );
+    }
+
+    return (
+        <FileDragAndDropContainer
+            onDrop={handleFileAnalyze}
+            validateFn={validateFile}
+            style={{
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+            }}
+        >
+            <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+                <Typography.Link onClick={() => setIsSettingsVisible(true)}>
+                    <SettingTwoTone style={{ fontSize: 22 }} />
+                </Typography.Link>
+            </Affix>
+
+            <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
+                <Settings
+                    settings={settings}
+                    isRefreshRequired={output !== null}
+                    onChange={(newSettings, refreshOutput) => updateSettings(newSettings, refreshOutput)}
+                />
+            </Drawer>
+
+            {!output
+                ? renderEmpty()
+                : <TextAnalyzer
+                    fileName={fileName}
+                    analyzerOutput={output}
+                    settings={settings}
+                    isAnalyzing={isAnalyzing}
+                ></TextAnalyzer> }
         </FileDragAndDropContainer>
     );
 }
