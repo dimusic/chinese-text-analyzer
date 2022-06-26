@@ -117,6 +117,7 @@ function TextAnalyzerWasmPage() {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
+                <Typography.Title level={2}>Chinese Text Analyzer</Typography.Title>
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
