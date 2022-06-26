@@ -68,13 +68,13 @@ function TextAnalyzerOutput(
             flexGrow: 1,
         }}>
             <PageHeader
-                style={{ paddingTop: 0 }}
+                style={{ paddingTop: 0, paddingLeft: 0 }}
                 title={fileName}
                 subTitle={`(${settingsToString(settings)})`}
             ></PageHeader>
 
             <Row gutter={16} style={{ marginBottom: 20 }}>
-                <Col span={6}>
+                <Col span={12} md={6} style={{marginBottom: 15}}>
                     <Statistic
                         title="Total Characters"
                         value={analyzerOutput?.chars_count}
@@ -82,7 +82,7 @@ function TextAnalyzerOutput(
                     ></Statistic>
                 </Col>
 
-                <Col span={6}>
+                <Col span={12} md={6} style={{marginBottom: 15}}>
                     <Statistic
                         title="Unique Characters"
                         value={analyzerOutput?.unique_chars_count}
@@ -94,7 +94,7 @@ function TextAnalyzerOutput(
                         <Button type="primary" onClick={() => setDetailedViewType('unique_chars')}>Show</Button>}
                 </Col>
 
-                <Col span={6}>
+                <Col span={12} md={6} style={{marginBottom: 15}}>
                     <Statistic
                         title="Total Words"
                         value={analyzerOutput?.words_count}
@@ -102,7 +102,7 @@ function TextAnalyzerOutput(
                     ></Statistic>
                 </Col>
 
-                <Col span={6}>
+                <Col span={12} md={6} style={{marginBottom: 15}}>
                     <Statistic
                         title="Unique Words"
                         value={analyzerOutput?.unique_words_count}
@@ -115,25 +115,27 @@ function TextAnalyzerOutput(
                 </Col>
             </Row>
 
-            <Divider></Divider>
-
             <Row gutter={16}>
-                <Col span={12}>
-                    <Typography.Title level={4}>HSK Breakdown</Typography.Title>
-
-                    <HskBreakdownTable
-                        hskAnalysis={analyzerOutput?.hsk_analysis}
-                        totalWordsCount={analyzerOutput?.words_count || 0}
-                    ></HskBreakdownTable>
-                </Col>
-
-                <Col span={12}>
+                <Col span={24} md={12}>
                     <Statistic
                         title="Average characters per sentence"
                         value={analyzerOutput?.avg_chars_per_sentence}
                         loading={useSkeleton}
                         style={{ marginBottom: 15 }}
                     ></Statistic>
+                </Col>
+
+                <Col span={24} md={0}>
+                    <Divider></Divider>
+                </Col>
+
+                <Col span={24} md={12}>
+                    <Typography.Title level={4}>HSK Breakdown</Typography.Title>
+
+                    <HskBreakdownTable
+                        hskAnalysis={analyzerOutput?.hsk_analysis}
+                        totalWordsCount={analyzerOutput?.words_count || 0}
+                    ></HskBreakdownTable>
                 </Col>
             </Row>
 

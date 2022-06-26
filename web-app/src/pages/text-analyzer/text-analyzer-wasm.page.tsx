@@ -118,9 +118,10 @@ function TextAnalyzerWasmPage() {
         return (
             <div style={{
                 display: 'flex',
+                margin: '0 auto',
                 flexDirection: 'column',
                 height: '100%',
-                width: 500,
+                width: 412,
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
@@ -154,11 +155,6 @@ function TextAnalyzerWasmPage() {
         <FileDragAndDropContainer
             onDrop={handleFileAnalyze}
             validateFn={validateFile}
-            style={{
-                height: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-            }}
         >
             <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
                 <Typography.Link onClick={() => setIsSettingsVisible(true)}>

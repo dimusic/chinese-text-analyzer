@@ -4,7 +4,7 @@ import FileDropOverlay from "../../pages/text-analyzer/components/file-drop-over
 interface FileDragAndDropContainerProps {
     onDrop: (file: File) => void;
     validateFn: (file: File) => Promise<boolean>;
-    style: CSSProperties,
+    style?: CSSProperties,
     children: ReactNode | ReactNode[];
 }
 
