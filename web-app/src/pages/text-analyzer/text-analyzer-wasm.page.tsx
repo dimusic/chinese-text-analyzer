@@ -9,12 +9,16 @@ import TextAnalyzer from "./components/text-analyzer";
 import FileDragAndDropContainer from "../../components/drag-and-drop/file-drag-and-drop-container";
 import { analyze } from '../../wasm/analyzer_wasm';
 
-const showInvalidEncodingMessage = () => {
+const showErrorMessage = (message: string, description: string) => {
     notification.error({
-        message: 'Wrong file encoding',
-        description: 'Only UTF-8 is supported at this time.',
+        message: message,
+        description: description,
         placement: "topLeft",
     })
+};
+
+const showInvalidEncodingMessage = () => {
+    showErrorMessage("Wrong file encoding", "Only UTF-8 is supported at this time.");
 };
 
 async function isUtf8(file: File): Promise<boolean> {
@@ -101,10 +105,13 @@ function TextAnalyzerWasmPage() {
 
     const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) {
-            console.error('no files');
+            showErrorMessage("File error", "Something went wrong during file upload");
         }
 
-        await handleFileAnalyze(e.target.files![0]);
+        const file = e.target.files![0];
+        if (await validateFile(file)) {
+            await handleFileAnalyze(file);
+        }
     }
 
     const renderEmpty = () => {
@@ -133,7 +140,7 @@ function TextAnalyzerWasmPage() {
                     textAlign: 'center',
                 }}>
                     <Divider type="horizontal">or</Divider>
-                    <Input type="file" onChange={handleFileInputChange}></Input>
+                    <Input type="file" accept="text/plain" onChange={handleFileInputChange}></Input>
                 </div>
             </div>
         );
