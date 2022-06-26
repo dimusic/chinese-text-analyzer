@@ -1,6 +1,6 @@
 import { SettingTwoTone } from "@ant-design/icons";
-import { Affix, notification, Drawer, Typography, Button, Divider } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { Affix, notification, Drawer, Typography, Button, Divider, Input } from "antd";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import languageEncoding from "detect-file-encoding-and-language";
 import { AnalyzerOutput } from "../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
@@ -99,6 +99,14 @@ function TextAnalyzerWasmPage() {
         }
     }, []);
 
+    const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) {
+            console.error('no files');
+        }
+
+        await handleFileAnalyze(e.target.files![0]);
+    }
+
     const renderEmpty = () => {
         return (
             <div style={{
@@ -124,7 +132,7 @@ function TextAnalyzerWasmPage() {
                     textAlign: 'center',
                 }}>
                     <Divider type="horizontal">or</Divider>
-                    <Button type="primary">Choose File</Button>
+                    <Input type="file" onChange={handleFileInputChange}></Input>
                 </div>
             </div>
         );
