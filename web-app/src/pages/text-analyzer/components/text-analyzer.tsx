@@ -10,10 +10,11 @@ interface TextAnalyzerProps {
     analyzerOutput: AnalyzerOutput | null;
     settings: TextAnalyzerSettings;
     isAnalyzing: boolean;
+    onBack: () => void;
 }
 
 function TextAnalyzer(
-    { fileName, analyzerOutput, settings, isAnalyzing }: TextAnalyzerProps,
+    { fileName, analyzerOutput, settings, isAnalyzing, onBack }: TextAnalyzerProps,
 ) {
     if (isAnalyzing) {
         return (
@@ -22,6 +23,7 @@ function TextAnalyzer(
                 settings={settings}
                 useSkeleton={true}
                 analyzerOutput={null}
+                onBack={onBack}
             ></TextAnalyzerOutput>
         );
     }
@@ -49,6 +51,7 @@ function TextAnalyzer(
                 fileName={fileName}
                 analyzerOutput={analyzerOutput}
                 settings={settings}
+                onBack={onBack}
             ></TextAnalyzerOutput>
         </>
     );

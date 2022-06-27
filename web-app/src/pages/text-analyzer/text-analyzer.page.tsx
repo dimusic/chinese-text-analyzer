@@ -183,6 +183,7 @@ function TextAnalyzerPage() {
                         analyzerOutput={output}
                         settings={settings}
                         isAnalyzing={isAnalyzing}
+                        onBack={() => setOutput(null)}
                     ></TextAnalyzer>
                 </div>
             </div>

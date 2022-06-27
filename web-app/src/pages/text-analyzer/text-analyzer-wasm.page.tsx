@@ -177,6 +177,7 @@ function TextAnalyzerWasmPage() {
                     analyzerOutput={output}
                     settings={settings}
                     isAnalyzing={isAnalyzing}
+                    onBack={() => setOutput(null)}
                 ></TextAnalyzer> }
         </FileDragAndDropContainer>
     );

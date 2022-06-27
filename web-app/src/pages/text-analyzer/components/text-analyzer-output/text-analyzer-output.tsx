@@ -1,5 +1,5 @@
 import { Button, Col, Divider, PageHeader, Row, Statistic, Typography } from "antd";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
 import DetailsModal from "./details-modal";
@@ -31,11 +31,12 @@ interface TextAnalyzerOutputProps {
     fileName: string;
     analyzerOutput: AnalyzerOutput | null;
     settings: TextAnalyzerSettings;
+    onBack?: () => void;
     useSkeleton?: boolean;
 }
 
 function TextAnalyzerOutput(
-    { fileName, analyzerOutput, settings, useSkeleton }: TextAnalyzerOutputProps
+    { fileName, analyzerOutput, settings, onBack, useSkeleton }: TextAnalyzerOutputProps
 ) {
     const [detailedViewType, setDetailedViewType] = useState<'unique_chars' | 'unique_words' | null>(null);
 
@@ -71,6 +72,7 @@ function TextAnalyzerOutput(
                 style={{ paddingTop: 0, paddingLeft: 0 }}
                 title={fileName}
                 subTitle={`(${settingsToString(settings)})`}
+                onBack={onBack}
             ></PageHeader>
 
             <Row gutter={16} style={{ marginBottom: 20 }}>
