@@ -8,15 +8,7 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-jieba-rs = "0.6"
-hsk = "0.1.0"
 wasm-bindgen = { version = "0.2.63", features = ["serde-serialize"] }
-unicode-normalization = "0.1.19"
-unicode-general-category = "0.5.1"
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-regex = "1"
-lazy_static = "1.4.0"
 
 analyzer = { path = "../analyzer" }
 
