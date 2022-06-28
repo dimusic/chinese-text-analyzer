@@ -1,7 +1,7 @@
 import { SettingTwoTone } from "@ant-design/icons";
-import { Affix, notification, Drawer, Typography, Button, Divider, Input } from "antd";
+import { Affix, notification, Drawer, Typography, Divider, Input } from "antd";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import languageEncoding from "detect-file-encoding-and-language";
+import { detect } from 'jschardet';
 import { AnalyzerOutput } from "../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../models/text-analyzer-settings";
 import Settings from "./components/settings";
@@ -22,9 +22,11 @@ const showInvalidEncodingMessage = () => {
 };
 
 async function isUtf8(file: File): Promise<boolean> {
-    const fileInfo = await languageEncoding(file);
+    const buffer = new Uint8Array(await file.arrayBuffer());
+    const binaryStr: string = String.fromCharCode(...buffer);
+    const detectionResult = detect(binaryStr);
     
-    return fileInfo.encoding === 'UTF-8';
+    return detectionResult.encoding === 'UTF-8';
 }
 
 async function analyzeText(text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {

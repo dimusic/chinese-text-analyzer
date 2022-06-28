@@ -13,7 +13,7 @@
     "@ant-design/icons": "^4.7.0",
     "@tauri-apps/api": "^1.0.0-rc.6",
     "antd": "^4.20.6",
-    "detect-file-encoding-and-language": "^2.2.2",
+    "jschardet": "^3.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
