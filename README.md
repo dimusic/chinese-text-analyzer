@@ -1,5 +1,6 @@
 # Chinese Text Analyzer/中文文本分析
 Tool to perform simple semantic analysis and gather stats to help measure text comprehension level.
+You can try it out [here](https://dimusic.github.io/chinese-text-analyzer/).
 ## Usage
 Drag and Drop plain text file (.txt) in UTF-8 encoding to the browser window. To analyze a new file repeat drag and drop.
 ![usage demo](text_analyzer.gif)
