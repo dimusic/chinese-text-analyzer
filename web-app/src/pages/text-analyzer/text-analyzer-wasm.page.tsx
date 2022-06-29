@@ -23,7 +23,10 @@ const showInvalidEncodingMessage = () => {
 
 async function isUtf8(file: File): Promise<boolean> {
     const buffer = new Uint8Array(await file.arrayBuffer());
-    const binaryStr: string = String.fromCharCode(...buffer);
+    let binaryStr = '';
+    for(let i = 0; i < buffer.length; i++) {
+        binaryStr += String.fromCharCode(buffer[i]);
+    }
     const detectionResult = detect(binaryStr);
     
     return detectionResult.encoding === 'UTF-8';
