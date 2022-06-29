@@ -97,12 +97,22 @@ impl Analyzer {
         filter_unique(&mut unique_chars);
 
         let filtered_text: String = chars.iter().collect();
-        let words = self.instance.lock().unwrap().cut(&filtered_text, false);
+        let words: Vec<&str> = self.instance.lock().unwrap().cut(&filtered_text, false)
+            .into_iter()
+            .filter(|&word| {
+                let word_filtered = if !filter_punctuation {
+                    filter_text_punctuation(word)
+                } else {
+                    word.to_owned()
+                };
+
+                word != " " && word_filtered.len() > 0
+            })
+            .collect();
         
         let mut unique_words = words.clone();
         filter_unique(&mut unique_words);
         let mut unique_words: Vec<String> = unique_words.into_iter()
-            .filter(|&w| { w != " " })
             .map(|w| { w.to_owned() })
             .collect();
         unique_words.sort_by_key(|w| { w.to_owned() });
