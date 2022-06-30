@@ -124,6 +124,7 @@ function TextAnalyzerWasmPage() {
             <div style={{
                 display: 'flex',
                 margin: '0 auto',
+                paddingTop: 30,
                 flexDirection: 'column',
                 height: '100%',
                 width: 412,
