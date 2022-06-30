@@ -43,8 +43,6 @@ fn get_chars_per_sentence(text: &str) -> usize {
         .filter(|sentence| { sentence.chars().count() >= 2 })
         .collect();
 
-        sentences.iter().for_each(|s| println!("{}; len: {}", s, s.chars().count()));
-
     let total_sentences = sentences.len();
     let total_chars = sentences.into_iter()
         .fold(0, |prev, current| {
@@ -85,28 +83,28 @@ impl Analyzer {
     pub fn analyze(&self, text: &str, filter_punctuation: bool) -> AnalyzedCounterOutput {
         let avg_chars_per_sentence = get_chars_per_sentence(&text);
 
-        let mut text = normalize_text(text);
+        let text = normalize_text(text);
+        let mut filtered_text = text.clone();
 
         if filter_punctuation {
-            text = filter_text_punctuation(&text);
+            filtered_text = filter_text_punctuation(&filtered_text);
         }
 
-        let chars: Vec<char> = text.chars().collect();
+        let chars: Vec<char> = filtered_text.chars().collect();
 
         let mut unique_chars = chars.clone();
         filter_unique(&mut unique_chars);
 
-        let filtered_text: String = chars.iter().collect();
-        let words: Vec<&str> = self.instance.lock().unwrap().cut(&filtered_text, false)
+        let words: Vec<&str> = self.instance.lock().unwrap().cut(&text, false)
             .into_iter()
             .filter(|&word| {
-                let word_filtered = if !filter_punctuation {
-                    filter_text_punctuation(word)
-                } else {
-                    word.to_owned()
-                };
+                if word == " " {
+                    return false
+                }
 
-                word != " " && word_filtered.len() > 0
+                let word_filtered = filter_text_punctuation(word);
+                
+                word_filtered.len() > 0 && word_filtered != " "
             })
             .collect();
         
