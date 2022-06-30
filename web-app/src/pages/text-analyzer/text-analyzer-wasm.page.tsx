@@ -27,9 +27,15 @@ async function isUtf8(file: File): Promise<boolean> {
     for(let i = 0; i < buffer.length; i++) {
         binaryStr += String.fromCharCode(buffer[i]);
     }
-    const detectionResult = detect(binaryStr);
+    try {
+        const detectionResult = detect(binaryStr);
+        return detectionResult.encoding === 'UTF-8';
+    }
+    catch(e) {
+        console.error('Encoding detection failed: ', e);
+        return false;
+    }
     
-    return detectionResult.encoding === 'UTF-8';
 }
 
 async function analyzeText(text: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
@@ -110,7 +116,7 @@ function TextAnalyzerWasmPage() {
 
     const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) {
-            showErrorMessage("File error", "Something went wrong during file upload");
+            return ;
         }
 
         const file = e.target.files![0];
