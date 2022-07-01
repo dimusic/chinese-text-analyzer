@@ -1,8 +1,10 @@
 import { Button, Col, Divider, PageHeader, Row, Statistic, Typography } from "antd";
 import html2canvas from "html2canvas";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
+import { saveCanvasAsImage } from "../../../../utils/save-canvas";
+import { appendWatermark } from "../../../../utils/watermark";
 import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
 import './text-analyzer-output.css';
@@ -58,22 +60,33 @@ function TextAnalyzerOutput(
         )
     };
 
-    const downloadResult = () => {
-        html2canvas(document.body, {
-            ignoreElements: (el: Element) => {
-                const ignoredList = ['settings-btn', 'download-results-btn'];
-                return Array.from(el.classList).some(className => ignoredList.includes(className));
-            }
-        }).then(function(canvas) {
-            // document.body.appendChild(canvas);
-        });
-    }
+    const downloadResult = useCallback(async () => {
+        try {
+            const canvas = await html2canvas(document.body, {
+                windowWidth: 412,
+                width: 412,
+                onclone: appendWatermark,
+                ignoreElements: (el: Element) => {
+                    const ignoredList = [
+                        'settings-btn',
+                        'download-results-btn',
+                        'ant-page-header-back',
+                        'show-modal-btn',
+                    ];
+                    return Array.from(el.classList).some(className => ignoredList.includes(className));
+                }
+            });
+
+            saveCanvasAsImage(canvas, fileName);
+        }
+        catch(e) {
+            console.error('download result failed', e);
+        };
+    }, [fileName]);
 
     if (!analyzerOutput && !useSkeleton) {
         return null;
     }
-
-    console.log('analyzerOutput', analyzerOutput);
 
     return (
         <div className="text-analyzer-output" style={{
@@ -108,7 +121,11 @@ function TextAnalyzerOutput(
                     ></Statistic>
 
                     {analyzerOutput?.unique_chars_count &&
-                        <Button type="primary" onClick={() => setDetailedViewType('unique_chars')}>Show</Button>}
+                        <Button
+                            className="show-modal-btn"
+                            type="primary"
+                            onClick={() => setDetailedViewType('unique_chars')}
+                        >Show</Button>}
                 </Col>
 
                 <Col span={12} md={6} style={{marginBottom: 15}}>
@@ -128,7 +145,11 @@ function TextAnalyzerOutput(
                     ></Statistic>
 
                     {analyzerOutput?.unique_chars_count &&
-                        <Button type="primary" onClick={() => setDetailedViewType('unique_words')}>Show</Button>}
+                        <Button
+                            className="show-modal-btn"
+                            type="primary"
+                            onClick={() => setDetailedViewType('unique_words')}
+                        >Show</Button>}
                 </Col>
             </Row>
 
