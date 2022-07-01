@@ -65,6 +65,7 @@ function TextAnalyzerOutput(
             const canvas = await html2canvas(document.body, {
                 windowWidth: 412,
                 width: 412,
+                windowHeight: 0,
                 onclone: appendWatermark,
                 ignoreElements: (el: Element) => {
                     const ignoredList = [
