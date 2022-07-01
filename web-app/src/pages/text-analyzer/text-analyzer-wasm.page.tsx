@@ -168,7 +168,7 @@ function TextAnalyzerWasmPage() {
             onDrop={handleFileAnalyze}
             validateFn={validateFile}
         >
-            <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+            <Affix className="settings-btn" style={{ position: 'absolute', right: 20 }} offsetTop={10}>
                 <Typography.Link onClick={() => setIsSettingsVisible(true)}>
                     <SettingTwoTone style={{ fontSize: 22 }} />
                 </Typography.Link>

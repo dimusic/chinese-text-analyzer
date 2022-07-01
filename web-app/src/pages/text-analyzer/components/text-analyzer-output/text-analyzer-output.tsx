@@ -1,4 +1,5 @@
 import { Button, Col, Divider, PageHeader, Row, Statistic, Typography } from "antd";
+import html2canvas from "html2canvas";
 import { memo, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
@@ -57,6 +58,17 @@ function TextAnalyzerOutput(
         )
     };
 
+    const downloadResult = () => {
+        html2canvas(document.body, {
+            ignoreElements: (el: Element) => {
+                const ignoredList = ['settings-btn', 'download-results-btn'];
+                return Array.from(el.classList).some(className => ignoredList.includes(className));
+            }
+        }).then(function(canvas) {
+            // document.body.appendChild(canvas);
+        });
+    }
+
     if (!analyzerOutput && !useSkeleton) {
         return null;
     }
@@ -73,6 +85,9 @@ function TextAnalyzerOutput(
                 title={fileName}
                 subTitle={`(${settingsToString(settings)})`}
                 onBack={onBack}
+                extra={[
+                    <Button key="1" className="download-results-btn" type="primary" onClick={downloadResult}>Download Result</Button>
+                ]}
             ></PageHeader>
 
             <Row gutter={16} style={{ marginBottom: 20 }}>
