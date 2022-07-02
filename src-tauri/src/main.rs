@@ -5,14 +5,14 @@
 
 use std::fs;
 
-use analyzer::{Analyzer, AnalyzedCounterOutput};
+use analyzer::{Analyzer, AnalyzerOutput};
 
 #[tauri::command]
 async fn analyze_file(
     analyzer: tauri::State<'_, Analyzer>,
     file_path: String,
     filter_punctuation: bool,
-) -> Result<AnalyzedCounterOutput, bool> {
+) -> Result<AnalyzerOutput, bool> {
     println!("{}", file_path);
     
     //@TODO handle failure

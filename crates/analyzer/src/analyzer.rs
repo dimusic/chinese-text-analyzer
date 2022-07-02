@@ -40,7 +40,7 @@ fn get_chars_per_sentence(text: &str) -> usize {
         .map(|sentence| {
             REGEX_ALL_SPACES.replace_all(sentence, "")
         })
-        .filter(|sentence| { sentence.chars().count() >= 2 })
+        .filter(|sentence| { sentence.chars().count() > 0 })
         .collect();
 
     let total_sentences = sentences.len();
@@ -57,8 +57,36 @@ fn get_chars_per_sentence(text: &str) -> usize {
     }
 }
 
+fn get_chars_per_paragraph(text: &str) -> usize {
+    lazy_static! {
+        static ref REGEX_LINE_BREAK: Regex = Regex::new(r"[\r\n]+").unwrap();
+        static ref REGEX_ALL_SPACES: Regex = Regex::new(r"[\s\r\n]+").unwrap();
+    }
+
+    let paragraphs: Vec<_> = REGEX_LINE_BREAK.split(text)
+        .into_iter()
+        .map(|paragraph| {
+            REGEX_ALL_SPACES.replace_all(paragraph, "")
+        })
+        .filter(|paragraph| { paragraph.len() > 0 })
+        .collect();
+
+    let total_paragraphs = paragraphs.len();
+    let total_chars = paragraphs.into_iter()
+        .fold(0, |prev, current| {
+            current.chars().count() + prev
+        });
+    
+    if total_chars > 0 {
+        total_chars / total_paragraphs
+    }
+    else {
+        0
+    }
+}
+
 #[derive(Debug, Serialize)]
-pub struct AnalyzedCounterOutput {
+pub struct AnalyzerOutput {
     pub chars_count: usize,
     pub unique_chars_count: usize,
     pub unique_chars: Vec<char>,
@@ -67,6 +95,7 @@ pub struct AnalyzedCounterOutput {
     pub unique_words: Vec<String>,
     pub hsk_analysis: HashMap<u8, i64>,
     pub avg_chars_per_sentence: usize,
+    pub avg_chars_per_paragraph: usize,
 }
 
 pub struct Analyzer {
@@ -80,9 +109,16 @@ impl Analyzer {
         }
     }
 
-    pub fn analyze(&self, text: &str, filter_punctuation: bool) -> AnalyzedCounterOutput {
-        let avg_chars_per_sentence = get_chars_per_sentence(&text);
+    pub fn analyze(&self, text: &str, filter_punctuation: bool) -> AnalyzerOutput {
+        //strip BOM
+        let text = match text.starts_with("\u{feff}") {
+            true => &text[3..],
+            false => text
+        };
 
+        let avg_chars_per_sentence = get_chars_per_sentence(text);
+        let avg_chars_per_paragraph = get_chars_per_paragraph(text);
+        
         let text = normalize_text(text);
         let mut filtered_text = text.clone();
 
@@ -117,7 +153,7 @@ impl Analyzer {
 
         let hsk_analysis = get_hsk_analysis(&words);
         
-        AnalyzedCounterOutput {
+        AnalyzerOutput {
             chars_count: chars.len(),
             unique_chars_count: unique_chars.len(),
             unique_chars,
@@ -126,6 +162,7 @@ impl Analyzer {
             unique_words,
             hsk_analysis,
             avg_chars_per_sentence,
+            avg_chars_per_paragraph,
         }
     }
 }

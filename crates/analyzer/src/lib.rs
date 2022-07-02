@@ -1,4 +1,4 @@
 mod analyzer;
 mod utils;
 
-pub use analyzer::{AnalyzedCounterOutput, Analyzer};
+pub use analyzer::{AnalyzerOutput, Analyzer};

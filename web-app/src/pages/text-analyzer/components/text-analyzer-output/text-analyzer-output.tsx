@@ -155,10 +155,19 @@ function TextAnalyzerOutput(
             </Row>
 
             <Row gutter={16}>
-                <Col span={24} md={12}>
+                <Col span={12} md={6}>
                     <Statistic
                         title="Average characters per sentence"
                         value={analyzerOutput?.avg_chars_per_sentence}
+                        loading={useSkeleton}
+                        style={{ marginBottom: 15 }}
+                    ></Statistic>
+                </Col>
+
+                <Col span={12} md={6}>
+                    <Statistic
+                        title="Average characters per paragraph"
+                        value={analyzerOutput?.avg_chars_per_paragraph}
                         loading={useSkeleton}
                         style={{ marginBottom: 15 }}
                     ></Statistic>

@@ -16,4 +16,5 @@ export interface AnalyzerOutput {
     unique_words: string[];
     hsk_analysis: HskAnalysis;
     avg_chars_per_sentence: number;
+    avg_chars_per_paragraph: number;
 }
