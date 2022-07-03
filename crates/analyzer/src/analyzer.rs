@@ -89,6 +89,12 @@ pub struct Analyzer {
     pub instance: Mutex<Jieba>,
 }
 
+impl Default for Analyzer {
+    fn default() -> Self {
+        Analyzer::new()
+    }
+}
+
 impl Analyzer {
     pub fn new() -> Self {
         Self {
@@ -98,7 +104,7 @@ impl Analyzer {
 
     pub fn analyze(&self, text: &str, filter_punctuation: bool) -> AnalyzerOutput {
         //strip BOM
-        let text = match text.starts_with("\u{feff}") {
+        let text = match text.starts_with('\u{feff}') {
             true => &text[3..],
             false => text
         };
@@ -127,7 +133,7 @@ impl Analyzer {
 
                 let word_filtered = filter_text_punctuation(word);
                 
-                word_filtered.len() > 0 && word_filtered != " "
+                !word_filtered.is_empty() && word_filtered != " "
             })
             .collect();
         

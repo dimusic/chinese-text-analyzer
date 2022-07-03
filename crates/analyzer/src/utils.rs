@@ -32,13 +32,12 @@ pub fn normalize_text(text: &str) -> String {
 
     let text = REGEX_EXTRA_SPACES.replace_all(text, " ");
 
-    return text.nfkd().collect();
+    text.nfkd().collect()
 }
 
 pub fn filter_text_punctuation(text: &str) -> String {
     text.chars().filter(|c| {
-        match get_general_category(*c) {
-            GeneralCategory::LineSeparator |
+        !matches!(get_general_category(*c), GeneralCategory::LineSeparator |
             GeneralCategory::ParagraphSeparator |
             GeneralCategory::DashPunctuation |
             GeneralCategory::OpenPunctuation |
@@ -57,8 +56,6 @@ pub fn filter_text_punctuation(text: &str) -> String {
             GeneralCategory::ModifierSymbol |
             GeneralCategory::CurrencySymbol |
             GeneralCategory::Surrogate |
-            GeneralCategory::MathSymbol => false,
-            _ => true
-        }
+            GeneralCategory::MathSymbol)
     }).collect()
 }
