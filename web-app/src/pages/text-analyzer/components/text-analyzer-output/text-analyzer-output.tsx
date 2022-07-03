@@ -60,7 +60,7 @@ function TextAnalyzerOutput(
         )
     };
 
-    const downloadResult = useCallback(async () => {
+    const exportResult = useCallback(async () => {
         try {
             const canvas = await html2canvas(document.body, {
                 windowWidth: 412,
@@ -70,7 +70,7 @@ function TextAnalyzerOutput(
                 ignoreElements: (el: Element) => {
                     const ignoredList = [
                         'settings-btn',
-                        'download-results-btn',
+                        'export-results-btn',
                         'ant-page-header-back',
                         'show-modal-btn',
                     ];
@@ -100,7 +100,7 @@ function TextAnalyzerOutput(
                 subTitle={`(${settingsToString(settings)})`}
                 onBack={onBack}
                 extra={[
-                    <Button key="1" className="download-results-btn" type="primary" onClick={downloadResult}>Download Result</Button>
+                    <Button key="1" className="export-results-btn" type="primary" onClick={exportResult}>Export Result</Button>
                 ]}
             ></PageHeader>
 
