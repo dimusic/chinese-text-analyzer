@@ -17,3 +17,7 @@ members = [
 
 [dependencies]
 analyzer = { path = "./crates/analyzer" }
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
