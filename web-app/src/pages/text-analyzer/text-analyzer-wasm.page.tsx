@@ -1,5 +1,5 @@
 import { SettingTwoTone } from "@ant-design/icons";
-import { Affix, notification, Drawer, Typography, Divider, Input } from "antd";
+import { Affix, Drawer, Typography, Divider, Input } from "antd";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { detect } from 'jschardet';
 import { AnalyzerOutput } from "../../models/analyzer-output";
@@ -8,14 +8,7 @@ import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
 import FileDragAndDropContainer from "../../components/drag-and-drop/file-drag-and-drop-container";
 import { analyze } from '../../wasm/analyzer_wasm';
-
-const showErrorMessage = (message: string, description: string) => {
-    notification.error({
-        message: message,
-        description: description,
-        placement: "topLeft",
-    })
-};
+import { showErrorMessage } from "../../utils/show-error";
 
 const showInvalidEncodingMessage = () => {
     showErrorMessage("Wrong file encoding", "Only UTF-8 is supported at this time.");

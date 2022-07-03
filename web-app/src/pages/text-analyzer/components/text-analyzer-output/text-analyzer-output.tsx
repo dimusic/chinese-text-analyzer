@@ -4,6 +4,7 @@ import { memo, useCallback, useState } from "react";
 import { AnalyzerOutput } from "../../../../models/analyzer-output";
 import { TextAnalyzerSettings } from "../../../../models/text-analyzer-settings";
 import { saveCanvasAsImage } from "../../../../utils/save-canvas";
+import { showErrorMessage } from "../../../../utils/show-error";
 import { appendWatermark } from "../../../../utils/watermark";
 import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
@@ -81,7 +82,8 @@ function TextAnalyzerOutput(
             saveCanvasAsImage(canvas, fileName);
         }
         catch(e) {
-            console.error('download result failed', e);
+            showErrorMessage("Export Failed", "Something went wrong.");
+            console.error('export failed', e);
         };
     }, [fileName]);
 
