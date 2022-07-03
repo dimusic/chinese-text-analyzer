@@ -29,60 +29,47 @@ fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
     res
 }
 
-fn get_chars_per_sentence(text: &str) -> usize {
+fn get_avg_chars_from_matches<'a, I>(vals: I) -> usize
+where I: IntoIterator<Item = &'a str> {
     lazy_static! {
-        static ref REGEX_END_OF_SENTENCE: Regex = Regex::new(r"[。.!\?\r\n]+").unwrap();
         static ref REGEX_ALL_SPACES: Regex = Regex::new(r"[\s\r\n]+").unwrap();
     }
 
-    let sentences: Vec<_> = REGEX_END_OF_SENTENCE.split(text)
-        .into_iter()
-        .map(|sentence| {
-            REGEX_ALL_SPACES.replace_all(sentence, "")
+    let all_items: Vec<_> = vals.into_iter()
+        .map(|item| {
+            REGEX_ALL_SPACES.replace_all(item, "")
         })
-        .filter(|sentence| { sentence.chars().count() > 0 })
+        .filter(|item| { item.chars().count() > 0 })
         .collect();
 
-    let total_sentences = sentences.len();
-    let total_chars = sentences.into_iter()
+    let total_count = all_items.len();
+    let total_chars = all_items.into_iter()
         .fold(0, |prev, current| {
             current.chars().count() + prev
         });
     
-    if total_sentences > 0 {
-        total_chars / total_sentences
+    if total_count > 0 {
+        total_chars / total_count
     }
     else {
         0
     }
 }
 
-fn get_chars_per_paragraph(text: &str) -> usize {
+fn get_avg_chars_per_sentence(text: &str) -> usize {
+    lazy_static! {
+        static ref REGEX_END_OF_SENTENCE: Regex = Regex::new(r"[。.!\?\r\n]+").unwrap();
+    }
+
+    get_avg_chars_from_matches(REGEX_END_OF_SENTENCE.split(text))
+}
+
+fn get_avg_chars_per_paragraph(text: &str) -> usize {
     lazy_static! {
         static ref REGEX_LINE_BREAK: Regex = Regex::new(r"[\r\n]+").unwrap();
-        static ref REGEX_ALL_SPACES: Regex = Regex::new(r"[\s\r\n]+").unwrap();
     }
 
-    let paragraphs: Vec<_> = REGEX_LINE_BREAK.split(text)
-        .into_iter()
-        .map(|paragraph| {
-            REGEX_ALL_SPACES.replace_all(paragraph, "")
-        })
-        .filter(|paragraph| { paragraph.len() > 0 })
-        .collect();
-
-    let total_paragraphs = paragraphs.len();
-    let total_chars = paragraphs.into_iter()
-        .fold(0, |prev, current| {
-            current.chars().count() + prev
-        });
-    
-    if total_chars > 0 {
-        total_chars / total_paragraphs
-    }
-    else {
-        0
-    }
+    get_avg_chars_from_matches(REGEX_LINE_BREAK.split(text))
 }
 
 #[derive(Debug, Serialize)]
@@ -116,9 +103,9 @@ impl Analyzer {
             false => text
         };
 
-        let avg_chars_per_sentence = get_chars_per_sentence(text);
-        let avg_chars_per_paragraph = get_chars_per_paragraph(text);
-        
+        let avg_chars_per_sentence = get_avg_chars_per_sentence(text);
+        let avg_chars_per_paragraph = get_avg_chars_per_paragraph(text);
+
         let text = normalize_text(text);
         let mut filtered_text = text.clone();
 
