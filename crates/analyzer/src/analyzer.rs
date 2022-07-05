@@ -8,7 +8,6 @@ use serde::{Serialize};
 
 use crate::{utils::{filter_unique, normalize_text, filter_text_punctuation}};
 
-
 fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
     let hsk_list = hsk::Hsk::new();
     let mut res: HashMap<u8, i64> = HashMap::new();

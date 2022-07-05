@@ -8,14 +8,12 @@ interface FileDragAndDropContainerProps {
     children: ReactNode | ReactNode[];
 }
 
-function FileDragAndDropContainer(
-    {
-        onDrop,
-        validateFn,
-        style,
-        children
-    }: FileDragAndDropContainerProps
-) {
+function FileDragAndDropContainer({
+    onDrop,
+    validateFn,
+    style,
+    children
+}: FileDragAndDropContainerProps) {
     const [showFileDropOverlay, setShowFileDropOverlay] = useState<boolean>(false);
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     let dragCounter = useRef(0);
