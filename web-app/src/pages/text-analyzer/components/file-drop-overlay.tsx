@@ -14,6 +14,8 @@ function FileDropOverlay({ isValid }: FileDropOverlayProps) {
     return (
         <div style={{
             position: 'absolute',
+            left: 0,
+            top: 0,
             zIndex: 999,
             display: 'flex',
             justifyContent: 'center',
