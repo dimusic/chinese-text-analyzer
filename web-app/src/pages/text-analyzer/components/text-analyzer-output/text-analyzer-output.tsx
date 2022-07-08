@@ -1,3 +1,4 @@
+import { SettingFilled, SettingOutlined, SettingTwoTone } from "@ant-design/icons";
 import { Button, Col, Divider, PageHeader, Row, Statistic, Typography } from "antd";
 import html2canvas from "html2canvas";
 import { memo, useCallback, useState } from "react";
@@ -35,12 +36,13 @@ interface TextAnalyzerOutputProps {
     fileName: string;
     analyzerOutput: AnalyzerOutput | null;
     settings: TextAnalyzerSettings;
+    onSettingsClick: () => void;
     onBack?: () => void;
     useSkeleton?: boolean;
 }
 
 function TextAnalyzerOutput(
-    { fileName, analyzerOutput, settings, onBack, useSkeleton }: TextAnalyzerOutputProps
+    { fileName, analyzerOutput, settings, onSettingsClick, onBack, useSkeleton }: TextAnalyzerOutputProps
 ) {
     const [detailedViewType, setDetailedViewType] = useState<'unique_chars' | 'unique_words' | null>(null);
 
@@ -102,7 +104,10 @@ function TextAnalyzerOutput(
                 subTitle={`(${settingsToString(settings)})`}
                 onBack={onBack}
                 extra={[
-                    <Button key="1" className="export-results-btn" type="primary" onClick={exportResult}>Export Result</Button>
+                    <Button key="1" className="export-results-btn" type="primary" onClick={exportResult}>Export Result</Button>,
+                    <Button key="2" className="settings-btn" type="link" onClick={onSettingsClick}>
+                        <SettingTwoTone style={{ fontSize: 22 }} />
+                    </Button>
                 ]}
             ></PageHeader>
 

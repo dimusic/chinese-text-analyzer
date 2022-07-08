@@ -160,11 +160,12 @@ function TextAnalyzerPage() {
                 flexDirection: 'column',
                 height: '100%',
             }}>
-                <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
-                    <Typography.Link onClick={() => setIsSettingsVisible(true)}>
-                        <SettingTwoTone style={{ fontSize: 22 }} />
-                    </Typography.Link>
-                </Affix>
+                {!output &&
+                    <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+                        <Typography.Link onClick={() => setIsSettingsVisible(true)}>
+                            <SettingTwoTone style={{ fontSize: 22 }} />
+                        </Typography.Link>
+                    </Affix>}
 
                 <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
                     <Settings
@@ -184,6 +185,7 @@ function TextAnalyzerPage() {
                         settings={settings}
                         isAnalyzing={isAnalyzing}
                         onBack={() => setOutput(null)}
+                        onSettingsClick={() => setIsSettingsVisible(true)}
                     ></TextAnalyzer>
                 </div>
             </div>

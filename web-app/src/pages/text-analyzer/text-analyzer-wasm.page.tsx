@@ -130,11 +130,12 @@ function TextAnalyzerWasmPage() {
             onDrop={handleFileAnalyze}
             validateFn={validateFile}
         >
-            <Affix className="settings-btn" style={{ position: 'absolute', right: 20 }} offsetTop={10}>
-                <Typography.Link onClick={() => setIsSettingsVisible(true)}>
-                    <SettingTwoTone style={{ fontSize: 22 }} />
-                </Typography.Link>
-            </Affix>
+            {!output &&
+                <Affix className="settings-btn" style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+                    <Typography.Link onClick={() => setIsSettingsVisible(true)}>
+                        <SettingTwoTone style={{ fontSize: 22 }} />
+                    </Typography.Link>
+                </Affix>}
 
             <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
                 <Settings
@@ -152,6 +153,7 @@ function TextAnalyzerWasmPage() {
                     settings={settings}
                     isAnalyzing={isAnalyzing}
                     onBack={() => setOutput(null)}
+                    onSettingsClick={() => setIsSettingsVisible(true)}
                 ></TextAnalyzer> }
         </FileDragAndDropContainer>
     );
