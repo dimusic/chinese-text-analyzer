@@ -1,5 +1,5 @@
 import { SettingTwoTone } from "@ant-design/icons";
-import { Affix, Drawer, Typography, Divider, Input } from "antd";
+import { Affix, Drawer, Typography, Divider, Input, Button } from "antd";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { detect } from 'jschardet';
 import { AnalyzerOutput } from "../../models/analyzer-output";
@@ -10,6 +10,7 @@ import FileDragAndDropContainer from "../../components/drag-and-drop/file-drag-a
 import { analyze } from '../../wasm/analyzer_wasm';
 import { showErrorMessage } from "../../utils/show-error";
 import SelectFile from "./components/select-file";
+import ViewGithubBtn from "./components/view-github-btn";
 
 const showInvalidEncodingMessage = () => {
     showErrorMessage("Wrong file encoding", "Only UTF-8 is supported at this time.");
@@ -131,11 +132,15 @@ function TextAnalyzerWasmPage() {
             validateFn={validateFile}
         >
             {!output &&
-                <Affix className="settings-btn" style={{ position: 'absolute', right: 20 }} offsetTop={10}>
-                    <Typography.Link onClick={() => setIsSettingsVisible(true)}>
-                        <SettingTwoTone style={{ fontSize: 22 }} />
-                    </Typography.Link>
-                </Affix>}
+                <>
+                    <Affix className="settings-btn" style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+                        <Typography.Link style={{ marginRight: 10 }} onClick={() => setIsSettingsVisible(true)}>
+                            <SettingTwoTone style={{ fontSize: 22 }} />
+                        </Typography.Link>
+                    </Affix>
+
+                    <ViewGithubBtn />
+                </>}
 
             <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
                 <Settings
