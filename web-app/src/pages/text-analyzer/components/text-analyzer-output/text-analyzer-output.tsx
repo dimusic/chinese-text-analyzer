@@ -104,7 +104,16 @@ function TextAnalyzerOutput(
                 subTitle={`(${settingsToString(settings)})`}
                 onBack={onBack}
                 extra={[
-                    <Button key="1" className="export-results-btn" type="primary" onClick={exportResult}>Export Result</Button>,
+                    <Button
+                        key="1"
+                        className="export-results-btn"
+                        type="primary"
+                        onClick={exportResult}
+                        style={{
+                            boxShadow: "rgb(55 0 143) 0px 0px 10px 0px"
+                        }}
+                    >Save Screenshot</Button>,
+
                     <Button key="2" className="settings-btn" type="link" onClick={onSettingsClick}>
                         <SettingTwoTone style={{ fontSize: 22 }} />
                     </Button>
