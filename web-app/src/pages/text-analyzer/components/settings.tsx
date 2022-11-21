@@ -9,10 +9,12 @@ interface SettingsProps {
 }
 
 function Settings({ settings, isRefreshRequired, onChange }: SettingsProps) {
-    const [tmpSettings, setSettings] = useState<TextAnalyzerSettings>({ filterPunctuation: true });
+    const [tmpSettings, setSettings] = useState<TextAnalyzerSettings>({
+        filterPunctuation: true,
+    });
 
     useEffect(() => {
-        setSettings({...settings});
+        setSettings({ ...settings });
     }, []);
 
     const onSettingChange = (name: string, value: any) => {
@@ -30,21 +32,28 @@ function Settings({ settings, isRefreshRequired, onChange }: SettingsProps) {
 
     const handleApply = () => {
         onChange(tmpSettings, true);
-    }
+    };
 
     return (
-        <div style={{
-            padding: '0 20px',
-        }}>
+        <div
+            style={{
+                padding: "0 20px",
+            }}
+        >
             <div style={{ marginBottom: 20 }}>
                 <Checkbox
                     checked={tmpSettings.filterPunctuation}
-                    onChange={(e) => onSettingChange('filterPunctuation', e.target.checked)}
-                >Remove Punctuation</Checkbox>
+                    onChange={(e) => onSettingChange("filterPunctuation", e.target.checked)}
+                >
+                    Remove Punctuation
+                </Checkbox>
             </div>
 
-            {isRefreshRequired &&
-                <Button type="primary" onClick={handleApply}>Apply</Button>}
+            {isRefreshRequired && (
+                <Button type="primary" onClick={handleApply}>
+                    Apply
+                </Button>
+            )}
         </div>
     );
 }

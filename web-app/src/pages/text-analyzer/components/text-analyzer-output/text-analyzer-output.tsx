@@ -9,25 +9,23 @@ import { showErrorMessage } from "../../../../utils/show-error";
 import { appendWatermark } from "../../../../utils/watermark";
 import DetailsModal from "./details-modal";
 import HskBreakdownTable from "./hsk-breakdown-table";
-import './text-analyzer-output.css';
+import "./text-analyzer-output.css";
 
-function detailedOutputTypeToTitle(outputType: 'unique_chars' | 'unique_words') {
-    switch(outputType) {
-        case 'unique_chars':
-            return 'Unique Characters';
-        
-        case 'unique_words':
-            return 'Unique Words';
+function detailedOutputTypeToTitle(outputType: "unique_chars" | "unique_words") {
+    switch (outputType) {
+        case "unique_chars":
+            return "Unique Characters";
+
+        case "unique_words":
+            return "Unique Words";
 
         default:
-            return '';
+            return "";
     }
 }
 
 function settingsToString(settings: TextAnalyzerSettings): string {
-    const punctuationSettingStr = settings.filterPunctuation
-        ? 'punctuation removed'
-        : 'punctuation included'
+    const punctuationSettingStr = settings.filterPunctuation ? "punctuation removed" : "punctuation included";
 
     return punctuationSettingStr;
 }
@@ -41,17 +39,22 @@ interface TextAnalyzerOutputProps {
     useSkeleton?: boolean;
 }
 
-function TextAnalyzerOutput(
-    { fileName, analyzerOutput, settings, onSettingsClick, onBack, useSkeleton }: TextAnalyzerOutputProps
-) {
-    const [detailedViewType, setDetailedViewType] = useState<'unique_chars' | 'unique_words' | null>(null);
+function TextAnalyzerOutput({
+    fileName,
+    analyzerOutput,
+    settings,
+    onSettingsClick,
+    onBack,
+    useSkeleton,
+}: TextAnalyzerOutputProps) {
+    const [detailedViewType, setDetailedViewType] = useState<"unique_chars" | "unique_words" | null>(null);
 
     const renderDetailsModal = () => {
         if (!analyzerOutput || !detailedViewType) {
             return null;
         }
 
-        const content = (analyzerOutput[detailedViewType] as string[]).join('\n');
+        const content = (analyzerOutput[detailedViewType] as string[]).join("\n");
 
         return (
             <DetailsModal
@@ -60,7 +63,7 @@ function TextAnalyzerOutput(
                 content={content}
                 onClose={() => setDetailedViewType(null)}
             ></DetailsModal>
-        )
+        );
     };
 
     const exportResult = useCallback(async () => {
@@ -72,21 +75,20 @@ function TextAnalyzerOutput(
                 onclone: appendWatermark,
                 ignoreElements: (el: Element) => {
                     const ignoredList = [
-                        'settings-btn',
-                        'export-results-btn',
-                        'ant-page-header-back',
-                        'show-modal-btn',
+                        "settings-btn",
+                        "export-results-btn",
+                        "ant-page-header-back",
+                        "show-modal-btn",
                     ];
-                    return Array.from(el.classList).some(className => ignoredList.includes(className));
-                }
+                    return Array.from(el.classList).some((className) => ignoredList.includes(className));
+                },
             });
 
             saveCanvasAsImage(canvas, fileName);
-        }
-        catch(e) {
+        } catch (e) {
             showErrorMessage("Export Failed", "Something went wrong.");
-            console.error('export failed', e);
-        };
+            console.error("export failed", e);
+        }
     }, [fileName]);
 
     if (!analyzerOutput && !useSkeleton) {
@@ -94,10 +96,13 @@ function TextAnalyzerOutput(
     }
 
     return (
-        <div className="text-analyzer-output" style={{
-            padding: '20px 20px 15px',
-            flexGrow: 1,
-        }}>
+        <div
+            className="text-analyzer-output"
+            style={{
+                padding: "20px 20px 15px",
+                flexGrow: 1,
+            }}
+        >
             <PageHeader
                 style={{ paddingTop: 0, paddingLeft: 0 }}
                 title={fileName}
@@ -110,18 +115,20 @@ function TextAnalyzerOutput(
                         type="primary"
                         onClick={exportResult}
                         style={{
-                            boxShadow: "rgb(55 0 143) 0px 0px 10px 0px"
+                            boxShadow: "rgb(55 0 143) 0px 0px 10px 0px",
                         }}
-                    >Save Screenshot</Button>,
+                    >
+                        Save Screenshot
+                    </Button>,
 
                     <Button key="2" className="settings-btn" type="link" onClick={onSettingsClick}>
                         <SettingTwoTone style={{ fontSize: 22 }} />
-                    </Button>
+                    </Button>,
                 ]}
             ></PageHeader>
 
             <Row gutter={16} style={{ marginBottom: 20 }}>
-                <Col span={12} md={6} style={{marginBottom: 15}}>
+                <Col span={12} md={6} style={{ marginBottom: 15 }}>
                     <Statistic
                         title="Total Characters"
                         value={analyzerOutput?.chars_count}
@@ -129,7 +136,7 @@ function TextAnalyzerOutput(
                     ></Statistic>
                 </Col>
 
-                <Col span={12} md={6} style={{marginBottom: 15}}>
+                <Col span={12} md={6} style={{ marginBottom: 15 }}>
                     <Statistic
                         title="Unique Characters"
                         value={analyzerOutput?.unique_chars_count}
@@ -137,15 +144,18 @@ function TextAnalyzerOutput(
                         style={{ marginBottom: 15 }}
                     ></Statistic>
 
-                    {analyzerOutput?.unique_chars_count &&
+                    {analyzerOutput?.unique_chars_count && (
                         <Button
                             className="show-modal-btn"
                             type="primary"
-                            onClick={() => setDetailedViewType('unique_chars')}
-                        >Show</Button>}
+                            onClick={() => setDetailedViewType("unique_chars")}
+                        >
+                            Show
+                        </Button>
+                    )}
                 </Col>
 
-                <Col span={12} md={6} style={{marginBottom: 15}}>
+                <Col span={12} md={6} style={{ marginBottom: 15 }}>
                     <Statistic
                         title="Total Words"
                         value={analyzerOutput?.words_count}
@@ -153,7 +163,7 @@ function TextAnalyzerOutput(
                     ></Statistic>
                 </Col>
 
-                <Col span={12} md={6} style={{marginBottom: 15}}>
+                <Col span={12} md={6} style={{ marginBottom: 15 }}>
                     <Statistic
                         title="Unique Words"
                         value={analyzerOutput?.unique_words_count}
@@ -161,12 +171,15 @@ function TextAnalyzerOutput(
                         style={{ marginBottom: 15 }}
                     ></Statistic>
 
-                    {analyzerOutput?.unique_chars_count &&
+                    {analyzerOutput?.unique_chars_count && (
                         <Button
                             className="show-modal-btn"
                             type="primary"
-                            onClick={() => setDetailedViewType('unique_words')}
-                        >Show</Button>}
+                            onClick={() => setDetailedViewType("unique_words")}
+                        >
+                            Show
+                        </Button>
+                    )}
                 </Col>
             </Row>
 

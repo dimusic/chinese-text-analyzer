@@ -1,7 +1,7 @@
-import { Typography } from 'antd';
-import { AnalyzerOutput } from '../../../models/analyzer-output';
-import { TextAnalyzerSettings } from '../../../models/text-analyzer-settings';
-import TextAnalyzerOutput from './text-analyzer-output/text-analyzer-output';
+import { Typography } from "antd";
+import { AnalyzerOutput } from "../../../models/analyzer-output";
+import { TextAnalyzerSettings } from "../../../models/text-analyzer-settings";
+import TextAnalyzerOutput from "./text-analyzer-output/text-analyzer-output";
 
 const { Text } = Typography;
 
@@ -14,13 +14,11 @@ interface TextAnalyzerProps {
     onSettingsClick: () => void;
 }
 
-function TextAnalyzer(
-    { fileName, analyzerOutput, settings, isAnalyzing, onBack, onSettingsClick }: TextAnalyzerProps,
-) {
+function TextAnalyzer({ fileName, analyzerOutput, settings, isAnalyzing, onBack, onSettingsClick }: TextAnalyzerProps) {
     if (isAnalyzing) {
         return (
             <TextAnalyzerOutput
-                fileName={''}
+                fileName={""}
                 settings={settings}
                 useSkeleton={true}
                 analyzerOutput={null}
@@ -31,23 +29,23 @@ function TextAnalyzer(
     }
 
     const renderEmpty = () => (
-        <div style={{
-            flexGrow: 1,
-            border: '5px dashed #afafaf',
-            padding: '10px 20px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}>
+        <div
+            style={{
+                flexGrow: 1,
+                border: "5px dashed #afafaf",
+                padding: "10px 20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
             <Text strong>Drop .txt file here to analyze</Text>
         </div>
     );
 
     return (
         <>
-            {!analyzerOutput
-                ? renderEmpty()
-                : null }
+            {!analyzerOutput ? renderEmpty() : null}
 
             <TextAnalyzerOutput
                 fileName={fileName}

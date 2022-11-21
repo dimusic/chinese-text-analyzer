@@ -9,14 +9,14 @@ import FileDropOverlay from "./components/file-drop-overlay";
 import Settings from "./components/settings";
 import TextAnalyzer from "./components/text-analyzer";
 
-const SUPPORTED_TEXT_FORMATS = ['txt'];
+const SUPPORTED_TEXT_FORMATS = ["txt"];
 
 async function tauriAnalyzeFile(filePath: string, filterPunctuation: boolean): Promise<AnalyzerOutput> {
     let output: AnalyzerOutput = await invoke("analyze_file", {
         filePath,
         filterPunctuation,
     });
-    
+
     return output;
 }
 
@@ -31,39 +31,43 @@ function TextAnalyzerPage() {
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
-    const refresh = useCallback(async (updatedSettings: TextAnalyzerSettings) => {
-        setIsAnalyzing(true);
-        try {
-            let output = await tauriAnalyzeFile(filePath as string, updatedSettings.filterPunctuation);
-            setOutput(output);
-        }
-        catch(e) {
-            console.error("Failed to analyze file", e);
-        }
-        finally {
-            setIsAnalyzing(false);
-        }
-    }, [filePath]);
+    const refresh = useCallback(
+        async (updatedSettings: TextAnalyzerSettings) => {
+            setIsAnalyzing(true);
+            try {
+                let output = await tauriAnalyzeFile(filePath as string, updatedSettings.filterPunctuation);
+                setOutput(output);
+            } catch (e) {
+                console.error("Failed to analyze file", e);
+            } finally {
+                setIsAnalyzing(false);
+            }
+        },
+        [filePath]
+    );
 
-    const updateSettings = useCallback((settings: TextAnalyzerSettings, refreshOutput: boolean) => {
-        localStorage.setItem('settings', JSON.stringify(settings));
-        console.log('new settings: ', settings);
-        setSettings(settings);
+    const updateSettings = useCallback(
+        (settings: TextAnalyzerSettings, refreshOutput: boolean) => {
+            localStorage.setItem("settings", JSON.stringify(settings));
+            console.log("new settings: ", settings);
+            setSettings(settings);
 
-        if (refreshOutput) {
-            refresh(settings);
-        }
-    }, [settings, setSettings]);
+            if (refreshOutput) {
+                refresh(settings);
+            }
+        },
+        [settings, setSettings]
+    );
 
     useEffect(() => {
-        const savedSettings = localStorage.getItem('settings');
-        
+        const savedSettings = localStorage.getItem("settings");
+
         if (savedSettings) {
-            console.log('restoring settings');
+            console.log("restoring settings");
             setSettings(JSON.parse(savedSettings));
         }
     }, []);
-    
+
     //tauri://file-drop
     useEffect(() => {
         const createTauriFileDropListener = async () => {
@@ -78,18 +82,15 @@ function TextAnalyzerPage() {
                 try {
                     let output = await tauriAnalyzeFile(eventFilePath, settings.filterPunctuation);
                     setOutput(output);
-                }
-                catch(e) {
+                } catch (e) {
                     console.error("Failed to analyze file", e);
-                }
-                finally {
+                } finally {
                     setIsAnalyzing(false);
                 }
             });
         };
 
-        let listener = createTauriFileDropListener()
-            .catch(console.error);
+        let listener = createTauriFileDropListener().catch(console.error);
 
         return () => {
             listener.then((unsub: any) => unsub());
@@ -107,14 +108,13 @@ function TextAnalyzerPage() {
                 }
 
                 setIsFileDropHovering(true);
-                
+
                 if (files.length > 1) {
                     setIsDragAndDropValid(false);
                     return;
                 }
 
-                const fileExt = files[0].indexOf('.') > -1
-                    && files[0].split('.').pop();
+                const fileExt = files[0].indexOf(".") > -1 && files[0].split(".").pop();
 
                 if (!fileExt || !SUPPORTED_TEXT_FORMATS.includes(fileExt)) {
                     setIsDragAndDropValid(false);
@@ -125,8 +125,7 @@ function TextAnalyzerPage() {
             });
         };
 
-        let listener = createTauriFileDropHoverListener()
-            .catch(console.error);
+        let listener = createTauriFileDropHoverListener().catch(console.error);
 
         return () => {
             listener.then((unsub: any) => unsub());
@@ -141,8 +140,7 @@ function TextAnalyzerPage() {
             });
         };
 
-        let listener = createTauriFileDropHoverListener()
-            .catch(console.error);
+        let listener = createTauriFileDropHoverListener().catch(console.error);
 
         return () => {
             listener.then((unsub: any) => unsub());
@@ -151,23 +149,29 @@ function TextAnalyzerPage() {
 
     return (
         <>
-            {isFileDropHovering
-                ? <FileDropOverlay isValid={isDragAndDropValid}></FileDropOverlay>
-                : null}
+            {isFileDropHovering ? <FileDropOverlay isValid={isDragAndDropValid}></FileDropOverlay> : null}
 
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-            }}>
-                {!output &&
-                    <Affix style={{ position: 'absolute', right: 20 }} offsetTop={10}>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                }}
+            >
+                {!output && (
+                    <Affix style={{ position: "absolute", right: 20 }} offsetTop={10}>
                         <Typography.Link onClick={() => setIsSettingsVisible(true)}>
                             <SettingTwoTone style={{ fontSize: 22 }} />
                         </Typography.Link>
-                    </Affix>}
+                    </Affix>
+                )}
 
-                <Drawer title="Settings" placement="right" onClose={() => setIsSettingsVisible(false)} visible={isSettingsVisible}>
+                <Drawer
+                    title="Settings"
+                    placement="right"
+                    onClose={() => setIsSettingsVisible(false)}
+                    visible={isSettingsVisible}
+                >
                     <Settings
                         settings={settings}
                         isRefreshRequired={output !== null}
@@ -175,12 +179,14 @@ function TextAnalyzerPage() {
                     />
                 </Drawer>
 
-                <div style={{
-                    flexGrow: 1,
-                    display: 'flex',
-                }}>
+                <div
+                    style={{
+                        flexGrow: 1,
+                        display: "flex",
+                    }}
+                >
                     <TextAnalyzer
-                        fileName=''
+                        fileName=""
                         analyzerOutput={output}
                         settings={settings}
                         isAnalyzing={isAnalyzing}

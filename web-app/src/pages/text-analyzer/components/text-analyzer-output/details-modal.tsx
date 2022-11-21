@@ -14,7 +14,7 @@ function DetailsModal({ title, visible, content, onClose }: DetailsModalProps) {
             title={title}
             centered
             visible={visible}
-            width={'100%'}
+            width={"100%"}
             onCancel={onClose}
             footer={[
                 <Button key="close" type="default" onClick={onClose}>
@@ -22,13 +22,9 @@ function DetailsModal({ title, visible, content, onClose }: DetailsModalProps) {
                 </Button>,
             ]}
         >
-            <TextArea
-                value={content}
-                rows={15}
-                readOnly={true}
-            ></TextArea>
+            <TextArea value={content} rows={15} readOnly={true}></TextArea>
         </Modal>
-    )
+    );
 }
 
 export default DetailsModal;

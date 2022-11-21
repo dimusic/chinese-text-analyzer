@@ -4,79 +4,83 @@ import FileDropOverlay from "../../pages/text-analyzer/components/file-drop-over
 interface FileDragAndDropContainerProps {
     onDrop: (file: File) => void;
     validateFn: (file: File) => Promise<boolean>;
-    style?: CSSProperties,
+    style?: CSSProperties;
     children: ReactNode | ReactNode[];
 }
 
-function FileDragAndDropContainer({
-    onDrop,
-    validateFn,
-    style,
-    children
-}: FileDragAndDropContainerProps) {
+function FileDragAndDropContainer({ onDrop, validateFn, style, children }: FileDragAndDropContainerProps) {
     const [showFileDropOverlay, setShowFileDropOverlay] = useState<boolean>(false);
     const [isDragAndDropValid, setIsDragAndDropValid] = useState<boolean>(true);
     let dragCounter = useRef(0);
 
-    const handleDragEnter = useCallback((e: DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleDragEnter = useCallback(
+        (e: DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        dragCounter.current++;
+            dragCounter.current++;
 
-        const items = e.dataTransfer.items;
-        if (items.length === 0) {
-            return;
-        }
+            const items = e.dataTransfer.items;
+            if (items.length === 0) {
+                return;
+            }
 
-        if (items.length === 0) {
-            return;
-        }
+            if (items.length === 0) {
+                return;
+            }
 
-        setShowFileDropOverlay(true);
+            setShowFileDropOverlay(true);
 
-        const item = items[0];
+            const item = items[0];
 
-        if (items.length > 1 || item.kind !== 'file' || item.type !== 'text/plain') {
-            setIsDragAndDropValid(false);
-        }
-    }, [dragCounter]);
+            if (items.length > 1 || item.kind !== "file" || item.type !== "text/plain") {
+                setIsDragAndDropValid(false);
+            }
+        },
+        [dragCounter]
+    );
 
-    const handleDragLeave = useCallback((e: DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleDragLeave = useCallback(
+        (e: DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        dragCounter.current--;
+            dragCounter.current--;
 
-        if (dragCounter.current === 0) {
-            setShowFileDropOverlay(false);
-            setIsDragAndDropValid(true);
-        }
-    }, [showFileDropOverlay, dragCounter]);
+            if (dragCounter.current === 0) {
+                setShowFileDropOverlay(false);
+                setIsDragAndDropValid(true);
+            }
+        },
+        [showFileDropOverlay, dragCounter]
+    );
 
     const handleDragOver = useCallback((e: DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
     }, []);
 
-    const handleDrop = useCallback(async (e: DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleDrop = useCallback(
+        async (e: DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-        setShowFileDropOverlay(false);
-        
-        const files = e.dataTransfer?.files;
-        dragCounter.current = 0;
-        if (!isDragAndDropValid) {
-            setIsDragAndDropValid(true);
-            return ;
-        }
+            setShowFileDropOverlay(false);
 
-        const file = files[0];
-        if (await validateFn(file)) {
-            onDrop(file);
-        }
-    }, [isDragAndDropValid, dragCounter]);
+            const files = e.dataTransfer?.files;
+            dragCounter.current = 0;
+            if (!isDragAndDropValid) {
+                setIsDragAndDropValid(true);
+                return;
+            }
+
+            const file = files[0];
+            if (await validateFn(file)) {
+                onDrop(file);
+            }
+        },
+        [isDragAndDropValid, dragCounter]
+    );
 
     return (
         <div
@@ -86,9 +90,7 @@ function FileDragAndDropContainer({
             onDrop={handleDrop}
             style={style}
         >
-            {showFileDropOverlay
-                ? <FileDropOverlay isValid={isDragAndDropValid}></FileDropOverlay>
-                : null}
+            {showFileDropOverlay ? <FileDropOverlay isValid={isDragAndDropValid}></FileDropOverlay> : null}
 
             {children}
         </div>
