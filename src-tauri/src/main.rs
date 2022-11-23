@@ -14,10 +14,10 @@ async fn analyze_file(
     filter_punctuation: bool,
 ) -> Result<AnalyzerOutput, bool> {
     println!("{}", file_path);
-    
+
     //@TODO handle failure
     let text = fs::read_to_string(file_path).unwrap();
-    
+
     Ok(analyzer.analyze(&text, filter_punctuation))
 }
 
@@ -32,17 +32,15 @@ fn main() {
             .add_native_item(tauri::MenuItem::Copy)
             .add_native_item(tauri::MenuItem::Paste)
             .add_native_item(tauri::MenuItem::Quit);
-        
-        menu = tauri::Menu::new()
-            .add_submenu(tauri::Submenu::new("Chinese Text Analyzer", submenu));
+
+        menu =
+            tauri::Menu::new().add_submenu(tauri::Submenu::new("Chinese Text Analyzer", submenu));
     }
-    
+
     tauri::Builder::default()
         .menu(menu)
         .manage(Analyzer::new())
-        .invoke_handler(tauri::generate_handler![
-            analyze_file
-        ])
+        .invoke_handler(tauri::generate_handler![analyze_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

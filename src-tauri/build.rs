@@ -1,7 +1,7 @@
 // use std::{path::PathBuf, env, process::Command};
 
 fn main() {
-  tauri_build::build()
+    tauri_build::build()
 }
 
 // fn main() {
@@ -9,21 +9,18 @@ fn main() {
 //   let paddle_c_install_dir = PathBuf::from(paddle_c_install_dir);
 
 //   // println!("cargo:warning={:?}", paddle_c_install_dir);
-  
+
 //   let manifest_dir = env::var("CARGO_MANIFEST_DIR");
 
 //   println!("cargo:warning={:?}", paddle_c_install_dir);
-  
+
 //   // println!("cargo rustc -- -C link-args=\"-Wl,-rpath,@executable_path/../lib\"");
 //   // println!("cargo rustc -- -C link-args=\"-Wl,-rpath,/Users/dmalkov/Documents/biba-ltd/rust/paddle-wrapper/paddle_c_2.3/paddle/lib\"");
 
 //   tauri_build::build();
 
-
-  
 //   #[cfg(target_os = "macos")]
 //   link_paddle_rpath();
-
 
 //   // install_name_tool -add_rpath "@executable_path/../Frameworks" path/to/binary
 // }
@@ -33,7 +30,6 @@ fn main() {
 //     use std::path::Path;
 
 //   let out_dir = env::var("OUT_DIR").unwrap();
-  
 
 //   // let primary_package = env::var("CARGO_PRIMARY_PACKAGE").unwrap();
 //   // let bin_exe = env::var("CARGO_BIN_EXE_chinese-text-analyzer").unwrap();
@@ -51,7 +47,7 @@ fn main() {
 //     // .join("bundle")
 //     // .join("macos")
 //     .join("chinese-text-analyzer");
-  
+
 //   println!("cargo:warning=app path: {:?}", app_path.display());
 
 //   Command::new("install_name_tool")

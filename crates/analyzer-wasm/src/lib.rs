@@ -1,5 +1,5 @@
-use wasm_bindgen::prelude::*;
 use analyzer::Analyzer;
+use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn analyze(text: String, filter_punctuation: bool) -> JsValue {

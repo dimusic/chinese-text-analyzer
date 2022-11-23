@@ -1,12 +1,11 @@
-
-use std::{sync::Mutex, collections::HashMap};
+use std::{collections::HashMap, sync::Mutex};
 
 use jieba_rs::Jieba;
 use lazy_static::lazy_static;
 use regex::Regex;
-use serde::{Serialize};
+use serde::Serialize;
 
-use crate::{utils::{filter_unique, normalize_text, filter_text_punctuation}};
+use crate::utils::{filter_text_punctuation, filter_unique, normalize_text};
 
 fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
     let hsk_list = hsk::Hsk::new();
@@ -29,28 +28,27 @@ fn get_hsk_analysis(words: &[&str]) -> HashMap<u8, i64> {
 }
 
 fn get_avg_chars_from_matches<'a, I>(vals: I) -> usize
-where I: IntoIterator<Item = &'a str> {
+where
+    I: IntoIterator<Item = &'a str>,
+{
     lazy_static! {
         static ref REGEX_ALL_SPACES: Regex = Regex::new(r"[\s\r\n]+").unwrap();
     }
 
-    let all_items: Vec<_> = vals.into_iter()
-        .map(|item| {
-            REGEX_ALL_SPACES.replace_all(item, "")
-        })
-        .filter(|item| { item.chars().count() > 0 })
+    let all_items: Vec<_> = vals
+        .into_iter()
+        .map(|item| REGEX_ALL_SPACES.replace_all(item, ""))
+        .filter(|item| item.chars().count() > 0)
         .collect();
 
     let total_count = all_items.len();
-    let total_chars = all_items.into_iter()
-        .fold(0, |prev, current| {
-            current.chars().count() + prev
-        });
-    
+    let total_chars = all_items
+        .into_iter()
+        .fold(0, |prev, current| current.chars().count() + prev);
+
     if total_count > 0 {
         total_chars / total_count
-    }
-    else {
+    } else {
         0
     }
 }
@@ -105,7 +103,7 @@ impl Analyzer {
         //strip BOM
         let text = match text.starts_with('\u{feff}') {
             true => &text[3..],
-            false => text
+            false => text,
         };
 
         let avg_chars_per_sentence = get_avg_chars_per_sentence(text);
@@ -123,28 +121,31 @@ impl Analyzer {
         let mut unique_chars = chars.clone();
         filter_unique(&mut unique_chars);
 
-        let words: Vec<&str> = self.instance.lock().unwrap().cut(&text, false)
+        let words: Vec<&str> = self
+            .instance
+            .lock()
+            .unwrap()
+            .cut(&text, false)
             .into_iter()
             .filter(|&word| {
                 if word == " " {
-                    return false
+                    return false;
                 }
 
                 let word_filtered = filter_text_punctuation(word);
-                
+
                 !word_filtered.is_empty() && word_filtered != " "
             })
             .collect();
-        
+
         let mut unique_words = words.clone();
         filter_unique(&mut unique_words);
-        let mut unique_words: Vec<String> = unique_words.into_iter()
-            .map(|w| { w.to_owned() })
-            .collect();
-        unique_words.sort_by_key(|w| { w.to_owned() });
+        let mut unique_words: Vec<String> =
+            unique_words.into_iter().map(|w| w.to_owned()).collect();
+        unique_words.sort_by_key(|w| w.to_owned());
 
         let hsk_analysis = get_hsk_analysis(&words);
-        
+
         AnalyzerOutput {
             chars_count: chars.len(),
             unique_chars_count: unique_chars.len(),
