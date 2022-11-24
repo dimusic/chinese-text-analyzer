@@ -35,7 +35,11 @@ interface HskBreakdownTableProps {
 function HskBreakdownTable({ hskAnalysis, totalWordsCount }: HskBreakdownTableProps) {
     let hskTableData: HskTableRow[] = Object.keys(hskAnalysis || {})
         .sort((a, b) => {
-            if (a === "0" || b === "0") {
+            if (a === "0") {
+                return 1;
+            }
+
+            if (b === "0") {
                 return -1;
             }
 
