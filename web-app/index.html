@@ -1,59 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chinese Text Analyzer (1.5.3)</title>
-    <meta name="keywords" content="text analyzer, chinese, words count, character count, HSK, breakdown, analysis">
-    <meta name="description" content="Chinese Text Analyzer. Shows word and characters count in a text file and provides HSK Breakdown with cumulative word frequency">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chinese Text Analyzer (1.5.3)</title>
+        <meta
+            name="keywords"
+            content="text analyzer, chinese, words count, character count, HSK, breakdown, analysis"
+        />
+        <meta
+            name="description"
+            content="Chinese Text Analyzer. Shows word and characters count in a text file and provides HSK Breakdown with cumulative word frequency"
+        />
 
-    <style>
-      html,
-      body,
-      #root {
-          height: 100%;
-      }
+        <style>
+            html,
+            body,
+            #root {
+                height: 100%;
+            }
 
-      .loader {
-        color: #40a9ff;
-        display: inline-block;
-        position: relative;
-        font-size: 48px;
-        font-family: Arial, Helvetica, sans-serif;
-        box-sizing: border-box;
-      }
-      .loader::after {
-        content: '';  
-        width: 5px;
-        height: 5px;
-        background: currentColor;
-        position: absolute;
-        bottom: 10px;
-        right: -5px;
-        box-sizing: border-box;
-        animation: animloader 1s linear infinite;
-      }
+            .loader {
+                color: #40a9ff;
+                display: inline-block;
+                position: relative;
+                font-size: 48px;
+                font-family: Arial, Helvetica, sans-serif;
+                box-sizing: border-box;
+            }
+            .loader::after {
+                content: "";
+                width: 5px;
+                height: 5px;
+                background: currentColor;
+                position: absolute;
+                bottom: 10px;
+                right: -5px;
+                box-sizing: border-box;
+                animation: animloader 1s linear infinite;
+            }
 
-      @keyframes animloader {
-        0% {
-          box-shadow: 10px 0 rgba(255, 255, 255, 0), 20px 0 rgba(255, 255, 255, 0);
-        }
-        50% {
-          box-shadow: 10px 0 #40a9ff, 20px 0 rgba(255, 255, 255, 0);
-        }
-        100% {
-          box-shadow: 10px 0 #40a9ff, 20px 0 #40a9ff;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="loader" style="display: flex; height: 100%; justify-content: center; align-items: center;">
-      <span class="loader">Loading</span>
-    </div>
+            @keyframes animloader {
+                0% {
+                    box-shadow: 10px 0 rgba(255, 255, 255, 0), 20px 0 rgba(255, 255, 255, 0);
+                }
+                50% {
+                    box-shadow: 10px 0 #40a9ff, 20px 0 rgba(255, 255, 255, 0);
+                }
+                100% {
+                    box-shadow: 10px 0 #40a9ff, 20px 0 #40a9ff;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="loader" style="display: flex; height: 100%; justify-content: center; align-items: center">
+            <span class="loader">Loading</span>
+        </div>
 
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
 </html>
