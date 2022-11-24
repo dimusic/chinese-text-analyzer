@@ -1,6 +1,6 @@
 [package]
 name = "analyzer"
-version = "1.5.3"
+version = "1.5.4"
 authors = ["Dmitry Malkov <targtn@gmail.com>"]
 edition = "2021"
 

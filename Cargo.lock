@@ -40,7 +40,7 @@ dependencies = [
 
 [[package]]
 name = "analyzer"
-version = "1.5.3"
+version = "1.5.4"
 dependencies = [
  "hsk",
  "jieba-rs",
@@ -54,7 +54,7 @@ dependencies = [
 
 [[package]]
 name = "analyzer-wasm"
-version = "1.5.3"
+version = "1.5.4"
 dependencies = [
  "analyzer",
  "wasm-bindgen",
@@ -306,7 +306,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chinese-text-analyzer"
-version = "1.5.3"
+version = "1.5.4"
 dependencies = [
  "analyzer",
 ]
