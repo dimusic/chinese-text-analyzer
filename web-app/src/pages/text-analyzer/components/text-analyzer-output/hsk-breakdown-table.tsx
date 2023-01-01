@@ -33,26 +33,31 @@ interface HskBreakdownTableProps {
 }
 
 function HskBreakdownTable({ hskAnalysis, totalWordsCount }: HskBreakdownTableProps) {
-    let hskTableData: HskTableRow[] = Object.keys(hskAnalysis || {})
-        .sort((a, b) => {
-            if (a === "0") {
-                return 1;
-            }
+    if (!hskAnalysis) {
+        return <Table columns={hskTableColumns} dataSource={[]} pagination={false} size={"small"} />;
+    }
 
-            if (b === "0") {
-                return -1;
-            }
-
-            return parseInt(a, 10) - parseInt(b, 10);
-        })
-        .map((lvl, i) => {
-            return {
-                level: parseInt(lvl, 10),
-                count: hskAnalysis ? (hskAnalysis[lvl] as number) : 0,
-                cumFreq: 0,
-                key: `${lvl}_${i}`,
-            };
+    let hskTableData: HskTableRow[] = [];
+    for (let [lvl, value] of hskAnalysis.entries()) {
+        hskTableData.push({
+            level: parseInt(lvl, 10),
+            count: value,
+            cumFreq: 0,
+            key: `hsk_${lvl}`,
         });
+    }
+
+    hskTableData.sort((a, b) => {
+        if (a.level === 0) {
+            return 1;
+        }
+
+        if (b.level === 0) {
+            return -1;
+        }
+
+        return a.level - b.level;
+    });
 
     hskTableData.forEach((row, i) => {
         let cumFreq = 0;

@@ -9,6 +9,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 wasm-bindgen = { version = "0.2.63", features = ["serde-serialize"] }
+serde-wasm-bindgen = "0.4"
 
 analyzer = { path = "../analyzer" }
 

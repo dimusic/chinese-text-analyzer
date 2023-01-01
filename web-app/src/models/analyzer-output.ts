@@ -3,9 +3,7 @@ export interface LacOutputItem {
     tag: string;
 }
 
-export interface HskAnalysis {
-    [k: string]: number;
-}
+export type HskAnalysis = Map<string, number>;
 
 export interface AnalyzerOutput {
     chars_count: number;
