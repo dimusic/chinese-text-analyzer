@@ -12,6 +12,7 @@ description = "Simple Chinese text analyzer"
 members = [
     "crates/analyzer",
     "crates/analyzer-wasm",
+    "crates/leptos-ui",
 ]
 
 [dependencies]
